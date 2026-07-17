@@ -82,9 +82,9 @@ export default function Hero() {
 
             {/* Description avec intégration IA */}
             <p className="mt-6 max-w-auto text-[15px] leading-relaxed text-black/60">
-              Ingénieur logiciel et créateur de produits pour startups et entreprises. 
-              Je transforme des problèmes complexes en applications rapides, scalables et 
-              dotées d&apos;IA pour convertir vos visiteurs en clients. Du design au frontend, 
+              Ingénieur logiciel et créateur de produits pour startups et entreprises.
+              Je transforme des problèmes complexes en applications rapides, scalables et
+              dotées d&apos;IA pour convertir vos visiteurs en clients. Du design au frontend,
               jusqu&lsquo;au backend : l&apos;objectif n&apos;est pas juste de coder, mais de mesurer votre succès.
             </p>
 
@@ -99,10 +99,15 @@ export default function Hero() {
                 VOIR MES PROJETS
               </button>
 
-              <button className="inline-flex items-center gap-1 text-sm font-bold text-black/70 underline underline-offset-4 transition hover:text-black">
+              <a
+                href="/resumen/fawase_dohou.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                download="CV_DOHOU_Fawase.pdf"
+                className="inline-flex items-center gap-1 text-sm font-bold text-black/70 underline underline-offset-4 transition hover:text-black">
                 CV / RÉSUMÉ
                 <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2.5} />
-              </button>
+              </a>
             </div>
 
             {/* Statistiques */}
