@@ -15,10 +15,15 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value, options))
+          // Correction ici : On passe un objet unique pour request.cookies.set
+          cookiesToSet.forEach(({ name, value, options }) => 
+            request.cookies.set({ name, value, ...options })
+          )
+          
           supabaseResponse = NextResponse.next({
             request,
           })
+          
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           )
@@ -41,8 +46,7 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // 3. Optionnel : Si l'utilisateur EST connecté et tente d'aller sur /auth, 
-  // on peut le rediriger directement vers le /dashboard
+  // 3. Si l'utilisateur EST connecté et tente d'aller sur /auth
   if (user && url.pathname.startsWith('/auth')) {
     url.pathname = '/dashboard'
     return NextResponse.redirect(url)
