@@ -34,9 +34,14 @@ export default function CtaFooter() {
                         <button className="inline-flex items-center gap-2 rounded-full bg-orange-600 px-6 py-3 text-[12px] font-bold tracking-widest text-white transition hover:bg-orange-500">
                             LANCER UN PROJET →
                         </button>
-                        <button className="inline-flex items-center gap-2 rounded-full border border-black/15 px-6 py-3 text-[12px] font-bold tracking-widest text-black transition hover:bg-black/5">
+                        <a
+                            href="https://wa.me/+2290197395756"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 rounded-full border border-black/15 px-6 py-3 text-[12px] font-bold tracking-widest text-black transition hover:bg-black/5"
+                        >
                             DISCUTER SUR WHATSAPP
-                        </button>
+                        </a>
                     </div>
                 </div>
 

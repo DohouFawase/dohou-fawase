@@ -50,9 +50,14 @@ export default function Navbar() {
               {user ? "MON COMPTE" : "CONNEXION"}
             </a>
           )}
-          <button className="rounded-full bg-black px-5 py-2.5 text-[11px] font-bold tracking-widest text-white transition hover:bg-black/85">
+          <a
+            href="/resumen/fawase_dohou.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            download="CV_DOHOU_Fawase.pdf"
+            className="rounded-full bg-black px-5 py-2.5 text-[11px] font-bold tracking-widest text-white transition hover:bg-black/85">
             ME RECRUTER →
-          </button>
+          </a>
         </div>
 
         {/* Burger button (Mobile) */}
@@ -63,28 +68,24 @@ export default function Navbar() {
           className="flex flex-col items-center justify-center gap-1.5 md:hidden"
         >
           <span
-            className={`h-0.5 w-6 bg-black transition-transform duration-300 ${
-              open ? "translate-y-2 rotate-45" : ""
-            }`}
+            className={`h-0.5 w-6 bg-black transition-transform duration-300 ${open ? "translate-y-2 rotate-45" : ""
+              }`}
           />
           <span
-            className={`h-0.5 w-6 bg-black transition-opacity duration-300 ${
-              open ? "opacity-0" : "opacity-100"
-            }`}
+            className={`h-0.5 w-6 bg-black transition-opacity duration-300 ${open ? "opacity-0" : "opacity-100"
+              }`}
           />
           <span
-            className={`h-0.5 w-6 bg-black transition-transform duration-300 ${
-              open ? "-translate-y-2 -rotate-45" : ""
-            }`}
+            className={`h-0.5 w-6 bg-black transition-transform duration-300 ${open ? "-translate-y-2 -rotate-45" : ""
+              }`}
           />
         </button>
       </nav>
 
       {/* Mobile menu */}
       <div
-        className={`overflow-hidden transition-[max-height] duration-300 ease-in-out md:hidden ${
-          open ? "max-h-96" : "max-h-0"
-        }`}
+        className={`overflow-hidden transition-[max-height] duration-300 ease-in-out md:hidden ${open ? "max-h-96" : "max-h-0"
+          }`}
       >
         <ul className="flex flex-col gap-6 border-t border-black/10 bg-white px-6 py-6 sm:px-10">
           {LINKS.map((link) => (
@@ -110,12 +111,15 @@ export default function Navbar() {
             </li>
           )}
           <li>
-            <button
-              onClick={() => setOpen(false)}
+            <a
+              href="/resumen/fawase_dohou.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              download="CV_DOHOU_Fawase.pdf"
               className="w-full rounded-full bg-black px-5 py-3 text-[11px] font-bold tracking-widest text-white transition hover:bg-black/85"
             >
               ME RECRUTER →
-            </button>
+            </a>
           </li>
         </ul>
       </div>
