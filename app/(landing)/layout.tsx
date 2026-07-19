@@ -5,17 +5,15 @@ import Navbar from "@/components/navigation";
 import { AuthProvider } from "@/context/AuthProvider";
 import CtaFooter from "@/components/footer";
 import Script from "next/script";
+import TerminalLoader from "@/components/terminalLoader";
 
-
-
-// 💡 Remplacez par votre vrai domaine une fois déployé sur Vercel
 const SITE_URL = 'https://dohou.vercel.app';
 export const metadata: Metadata = {
   title: 'Développeur Full-Stack | Dohou Gbenoupko Fawase',
   description: 'Je conçois des produits web et mobiles performants et scalables pour booster votre croissance.',
-  metadataBase: new URL(SITE_URL), // Indique à Next.js de préfixer automatiquement les chemins relatifs
+  metadataBase: new URL(SITE_URL),
   alternates: {
-    canonical: '/', // Sera traduit en https://votre-portfolio.vercel.app/
+    canonical: '/',
   },
   icons: {
     icon: '/og-image.svg',
@@ -25,13 +23,12 @@ export const metadata: Metadata = {
     description: 'Ingénieur logiciel et créateur de produits pour startups.',
     url: SITE_URL,
     siteName: 'Mon Portfolio',
-
     images: [
       {
-        url: '/og-image.png', // Placé dans public/og-image.svg (Next.js utilisera metadataBase pour la rendre absolue)
+        url: '/og-image.png',
         width: 1200,
         height: 630,
-        type: 'image/png', // Optionnel mais recommandé pour les fichiers SVG
+        type: 'image/png',
       },
     ],
     locale: 'fr_FR',
@@ -46,7 +43,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="fr" // Passé en "fr" car votre contenu est en français
+      lang="fr"
       className={`${Alpino.variable} h-full`}
     >
       <head>
@@ -54,21 +51,19 @@ export default function RootLayout({
           src="https://www.googletagmanager.com/gtag/js?id=G-Z874S8CXDD"
           strategy="afterInteractive"
         />
-
-        {/* Deuxième script : Initialise la configuration de Google Analytics */}
         <Script id="google-analytics" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-
             gtag('config', 'G-Z874S8CXDD');
           `}
         </Script>
-
       </head>
       <body className="min-h-full flex flex-col">
         <AuthProvider>
+          {/* Placé en haut pour bloquer l'écran dès le premier rendu */}
+          <TerminalLoader />
           <Navbar />
           {children}
           <CtaFooter />
