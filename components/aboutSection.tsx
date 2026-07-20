@@ -32,7 +32,7 @@ const FACTS = [
 
 export default function About() {
   return (
-    <section className="w-full bg-white text-black">
+    <section className="w-full bg-white text-black" id="about">
       <div className="mx-auto container px-6 pt-14 pb-24 sm:px-10 lg:px-16">
         {/* eyebrow */}
         <div className="mb-10 inline-flex items-center gap-3">

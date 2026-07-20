@@ -81,7 +81,7 @@ export default function Work() {
   }, []);
 
   return (
-    <section className="w-full bg-white text-black">
+    <section className="w-full bg-white text-black" id="projects">
       <div className="mx-auto container border-t border-black/10 px-6 pt-14 pb-24 sm:px-10 lg:px-16">
         {/* surtitre */}
         <div className="mb-6 inline-flex items-center gap-3">

@@ -1,21 +1,32 @@
 import { NextResponse } from "next/server";
+import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 
 export async function POST(request: Request) {
   try {
-    const { path } = await request.json();
+    const { section } = await request.json();
+    const headerList = await headers();
 
-    // Récupération du pays depuis l'en-tête Vercel/Cloudflare (par défaut 'Inconnu')
-    const country = request.headers.get("x-vercel-ip-country") || "Visiteur";
+    // Récupération du pays
+    const countryCode =
+      headerList.get("x-vercel-ip-country") ||
+      headerList.get("cf-ipcountry") ||
+      "Inconnu";
+
+    const countryName =
+      countryCode === "BJ" ? "Bénin" :
+      countryCode === "FR" ? "France" : countryCode;
 
     const supabase = await createClient();
+
     await supabase.from("page_views").insert({
-      path,
-      country,
+      path: "/",
+      section: section || "Accueil",
+      country: countryName,
     });
 
     return NextResponse.json({ success: true });
-  } catch {
-    return NextResponse.json({ error: "Erreur de suivi" }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ error: "Tracking error" }, { status: 500 });
   }
 }

@@ -84,7 +84,7 @@ export default function Contact() {
   };
 
   return (
-    <section className="w-full bg-white text-black">
+    <section className="w-full bg-white text-black" id="contact">
       <div className="mx-auto container px-6 pt-14 pb-24 sm:px-10 lg:px-16">
 
         {/* Surtitre */}

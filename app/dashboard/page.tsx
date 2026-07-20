@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import Link from "next/link";
 import { 
   getTraficStats, 
   getTopProjects, 
@@ -9,7 +11,15 @@ import {
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminDashboardPage() {
+interface PageProps {
+  searchParams: Promise<{ period?: string }>;
+}
+
+export default async function AdminDashboardPage({ searchParams }: PageProps) {
+  const resolvedParams = await searchParams;
+  const currentPeriod = resolvedParams.period || "all";
+
+  // Chargement en parallèle des statistiques
   const [
     trafic, 
     topProjects, 
@@ -26,17 +36,16 @@ export default async function AdminDashboardPage() {
     getTrafficByCountry(),
   ]);
 
-  // Max pour les projets
+  // Max pour les calculs de barres
   const maxProjectViews = topProjects && topProjects.length > 0 
     ? Math.max(...topProjects.map((p) => p.views_count || 0), 1) 
     : 1;
 
-  // Max pour le trafic par pays
   const maxCountryVisits = countryTraffic && countryTraffic.length > 0
     ? Math.max(...countryTraffic.map((c) => Number(c.total) || 0), 1)
     : 1;
 
-  // Extraction / Préparation des sections les plus visitées (sur la base de trafic)
+  // Calcul des sections
   const sectionsData = (trafic || []).reduce((acc: Record<string, number>, item: any) => {
     const key = item.section || item.path || "Accueil (Hero)";
     acc[key] = (acc[key] || 0) + 1;
@@ -51,14 +60,42 @@ export default async function AdminDashboardPage() {
     ? Math.max(...sectionsList.map((s) => s.count), 1) 
     : 1;
 
+  // Simulation des dernières activités à partir du trafic récent
+  const recentLogs = (trafic || []).slice(0, 5);
+
   return (
     <div className="p-8 space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight text-black">Dashboard Analytique</h1>
-        <p className="text-sm text-gray-500 mt-1">Vue d'ensemble de l'activité globale de ton portfolio.</p>
+      {/* ---------------- EN-TÊTE + FILTRE CHRONO ---------------- */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-black">Dashboard Analytique</h1>
+          <p className="text-sm text-gray-500 mt-1">Vue d'ensemble de l'activité de ton portfolio.</p>
+        </div>
+
+        {/* Filtres Temporels */}
+        <div className="inline-flex p-1 bg-gray-100 rounded-lg text-xs font-semibold">
+          {[
+            { label: "Tout", value: "all" },
+            { label: "30 jours", value: "30d" },
+            { label: "7 jours", value: "7d" },
+            { label: "Aujourd'hui", value: "24h" },
+          ].map((period) => (
+            <Link
+              key={period.value}
+              href={`/admin/dashboard?period=${period.value}`}
+              className={`px-3 py-1.5 rounded-md transition-all ${
+                currentPeriod === period.value
+                  ? "bg-white text-black shadow-sm font-bold"
+                  : "text-gray-500 hover:text-black"
+              }`}
+            >
+              {period.label}
+            </Link>
+          ))}
+        </div>
       </div>
 
-      {/* ---------------- 1. Cartes KPI de résumé ---------------- */}
+      {/* ---------------- 1. Cartes KPI (Pro-Level) ---------------- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         
         {/* Total Vues du site */}
@@ -74,12 +111,12 @@ export default async function AdminDashboardPage() {
           </div>
           <div>
             <p className="text-3xl font-extrabold text-black">{totalViews}</p>
-            <p className="text-xs text-gray-400 mt-1">Trafic global accumulé</p>
+            <p className="text-xs text-gray-400 mt-1">Visites enregistrées sur le site</p>
           </div>
         </div>
 
-        {/* Messages non lus */}
-        <div className="p-6 bg-white border border-black/10 rounded-xl shadow-sm space-y-3">
+        {/* Messages non lus + Bouton rapide */}
+        <div className="p-6 bg-white border border-black/10 rounded-xl shadow-sm space-y-3 relative group">
           <div className="flex justify-between items-center">
             <p className="text-xs font-bold tracking-wider text-gray-400 uppercase">Messages Non Lus</p>
             {unreadMessages > 0 ? (
@@ -93,11 +130,19 @@ export default async function AdminDashboardPage() {
               </span>
             )}
           </div>
-          <div>
-            <p className="text-3xl font-extrabold text-orange-600">{unreadMessages}</p>
-            <p className="text-xs text-gray-400 mt-1">
-              {unreadMessages === 0 ? "Aucun nouveau message" : `${unreadMessages} demande${unreadMessages > 1 ? 's' : ''} en attente`}
-            </p>
+          <div className="flex justify-between items-end">
+            <div>
+              <p className="text-3xl font-extrabold text-orange-600">{unreadMessages}</p>
+              <p className="text-xs text-gray-400 mt-1">
+                {unreadMessages === 0 ? "Aucune nouvelle demande" : `${unreadMessages} message(s) en attente`}
+              </p>
+            </div>
+            <Link 
+              href="/admin/messages" 
+              className="text-xs font-bold text-black underline hover:text-orange-600 transition-colors"
+            >
+              Voir la boîte →
+            </Link>
           </div>
         </div>
 
@@ -114,7 +159,7 @@ export default async function AdminDashboardPage() {
           </div>
           <div>
             <p className="text-3xl font-extrabold text-black">{cvDownloads}</p>
-            <p className="text-xs text-gray-400 mt-1">Téléchargements totaux</p>
+            <p className="text-xs text-gray-400 mt-1">Intérêt direct des recruteurs</p>
           </div>
         </div>
 
@@ -195,58 +240,85 @@ export default async function AdminDashboardPage() {
 
       </div>
 
-      {/* ---------------- 3. GRAND GRAPHIQUE GLOBAL EN BAS ---------------- */}
-      <div className="p-8 bg-white border border-black/10 rounded-xl shadow-sm space-y-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-4 border-b border-gray-100">
-          <div>
-            <h2 className="text-xl font-bold text-black">Analyse Globale des Sections du Site</h2>
-            <p className="text-xs text-gray-500">Visualisation de l'attention accordée à chaque partie du portfolio (SPA / Navigation).</p>
+      {/* ---------------- 3. SECTION BAS : GRAPH + LIVE LOG ---------------- */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        {/* Grand graphique des sections du site (2 cols) */}
+        <div className="lg:col-span-2 p-6 bg-white border border-black/10 rounded-xl shadow-sm space-y-6">
+          <div className="flex justify-between items-center pb-4 border-b border-gray-100">
+            <div>
+              <h2 className="text-lg font-bold text-black">Analyse Globale des Sections</h2>
+              <p className="text-xs text-gray-500">Comportement de navigation des visiteurs.</p>
+            </div>
+            <span className="text-xs font-bold text-black px-2.5 py-1 bg-gray-100 rounded-md">
+              {sectionsList.length} sections
+            </span>
           </div>
-          <span className="text-xs font-bold text-black px-3 py-1 bg-gray-100 rounded-full">
-            {sectionsList.length} sections suivies
-          </span>
-        </div>
 
-        {sectionsList.length > 0 ? (
-          <div className="space-y-6 pt-2">
-            {sectionsList.map((sec) => {
-              const pct = Math.round((sec.count / maxSectionVisits) * 100);
-              const shareOfTotal = totalViews > 0 ? Math.round((sec.count / totalViews) * 100) : 0;
-
-              return (
-                <div key={sec.name} className="space-y-2">
-                  <div className="flex justify-between items-center text-sm font-semibold">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full bg-orange-500 inline-block" />
+          {sectionsList.length > 0 ? (
+            <div className="space-y-5">
+              {sectionsList.map((sec) => {
+                const pct = Math.round((sec.count / maxSectionVisits) * 100);
+                return (
+                  <div key={sec.name} className="space-y-1.5">
+                    <div className="flex justify-between items-center text-sm font-medium">
                       <span className="text-black capitalize">{sec.name.replace("/", "").replace("-", " ") || "Page Principale"}</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs text-gray-400 font-normal">~{shareOfTotal}% du trafic</span>
-                      <span className="text-xs font-extrabold text-black px-2.5 py-1 bg-gray-100 rounded-md">
+                      <span className="text-xs font-extrabold text-black">
                         {sec.count} vue{sec.count > 1 ? "s" : ""}
                       </span>
                     </div>
+                    <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden p-0.5">
+                      <div 
+                        className="bg-gradient-to-r from-orange-500 to-black h-full rounded-full transition-all duration-500"
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
                   </div>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="text-sm text-gray-400 italic">Aucune donnée disponible.</p>
+          )}
+        </div>
 
-                  {/* Grande barre de jauge réactive */}
-                  <div className="w-full bg-gray-100 rounded-full h-4 overflow-hidden p-0.5">
-                    <div 
-                      className="bg-gradient-to-r from-orange-500 to-black h-full rounded-full transition-all duration-700 ease-out"
-                      style={{ width: `${pct}%` }}
-                    />
+        {/* Live Activity Feed (1 col) */}
+        <div className="p-6 bg-white border border-black/10 rounded-xl shadow-sm space-y-6">
+          <div className="pb-4 border-b border-gray-100 flex justify-between items-center">
+            <h2 className="text-lg font-bold text-black">Activité Récente</h2>
+            <span className="flex h-2 w-2 relative">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+          </div>
+
+          {recentLogs.length > 0 ? (
+            <div className="space-y-4">
+              {recentLogs.map((log: any, idx: number) => (
+                <div key={idx} className="flex gap-3 items-start text-xs">
+                  <div className="p-1.5 rounded-full bg-orange-50 text-orange-600 mt-0.5">
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  </div>
+                  <div className="space-y-0.5 flex-1">
+                    <p className="font-semibold text-black">
+                      Visite sur <span className="text-orange-600">{log.section || log.path || "Accueil"}</span>
+                    </p>
+                    <p className="text-gray-400">
+                      {log.country ? `Depuis ${log.country}` : "Origine inconnue"}
+                    </p>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="py-12 text-center space-y-2">
-            <p className="text-sm text-gray-400 italic">Aucune donnée de section enregistrée pour le moment.</p>
-            <p className="text-xs text-gray-400">Les données s'afficheront dès que des visiteurs parcourront le site.</p>
-          </div>
-        )}
-      </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-gray-400 italic">Aucune activité récente.</p>
+          )}
+        </div>
 
+      </div>
     </div>
   );
 }

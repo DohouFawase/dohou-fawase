@@ -52,7 +52,7 @@ export default function Experience() {
   }, []);
 
   return (
-    <section className="w-full bg-white text-black">
+    <section className="w-full bg-white text-black" id="work">
       <div className="mx-auto container px-6 pt-14 pb-24 sm:px-10 lg:px-16">
         <div className="mb-10 inline-flex items-center gap-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-full border border-orange-600/40 text-[11px] font-bold text-orange-600">
