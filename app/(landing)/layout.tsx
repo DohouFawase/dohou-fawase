@@ -6,6 +6,7 @@ import { AuthProvider } from "@/context/AuthProvider";
 import CtaFooter from "@/components/footer";
 import Script from "next/script";
 import TerminalLoader from "@/components/terminalLoader";
+import { AnalyticsTracker } from "@/components/analytics-tracker";
 
 const SITE_URL = 'https://dohou.vercel.app';
 export const metadata: Metadata = {
@@ -64,6 +65,7 @@ export default function RootLayout({
         <AuthProvider>
           {/* Placé en haut pour bloquer l'écran dès le premier rendu */}
           <TerminalLoader />
+          <AnalyticsTracker />
           <Navbar />
           {children}
           <CtaFooter />

@@ -2,6 +2,7 @@
 
 import useAuth from "@/hooks/useAuth";
 import { useState } from "react";
+import { createClient } from "@/utils/supabase/client";
 
 const LINKS = [
   { label: "À PROPOS", href: "#about" },
@@ -15,9 +16,19 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const { user, loading } = useAuth();
 
+  // Fonction pour enregistrer le téléchargement dans Supabase
+  const handleDownloadCV = async () => {
+    try {
+      const supabase = createClient();
+      await supabase.rpc("increment_cv_downloads");
+    } catch (error) {
+      console.error("Erreur lors de l'incrémentation du compteur CV:", error);
+    }
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-black/10 bg-white/90 backdrop-blur">
-      <nav className="mx-auto flex container items-center justify-between px-6 py-4 sm:px-10 lg:px-16">
+      <nav className="mx-auto container flex items-center justify-between px-6 py-4 sm:px-10 lg:px-16">
         {/* Logo */}
         <a href="#" className="flex items-center gap-2.5">
           <span className="h-2 w-2 rounded-full bg-orange-600" />
@@ -55,7 +66,9 @@ export default function Navbar() {
             target="_blank"
             rel="noopener noreferrer"
             download="CV_DOHOU_Fawase.pdf"
-            className="rounded-full bg-black px-5 py-2.5 text-[11px] font-bold tracking-widest text-white transition hover:bg-black/85">
+            onClick={handleDownloadCV}
+            className="rounded-full bg-black px-5 py-2.5 text-[11px] font-bold tracking-widest text-white transition hover:bg-black/85"
+          >
             ME RECRUTER →
           </a>
         </div>
@@ -68,24 +81,28 @@ export default function Navbar() {
           className="flex flex-col items-center justify-center gap-1.5 md:hidden"
         >
           <span
-            className={`h-0.5 w-6 bg-black transition-transform duration-300 ${open ? "translate-y-2 rotate-45" : ""
-              }`}
+            className={`h-0.5 w-6 bg-black transition-transform duration-300 ${
+              open ? "translate-y-2 rotate-45" : ""
+            }`}
           />
           <span
-            className={`h-0.5 w-6 bg-black transition-opacity duration-300 ${open ? "opacity-0" : "opacity-100"
-              }`}
+            className={`h-0.5 w-6 bg-black transition-opacity duration-300 ${
+              open ? "opacity-0" : "opacity-100"
+            }`}
           />
           <span
-            className={`h-0.5 w-6 bg-black transition-transform duration-300 ${open ? "-translate-y-2 -rotate-45" : ""
-              }`}
+            className={`h-0.5 w-6 bg-black transition-transform duration-300 ${
+              open ? "-translate-y-2 -rotate-45" : ""
+            }`}
           />
         </button>
       </nav>
 
       {/* Mobile menu */}
       <div
-        className={`overflow-hidden transition-[max-height] duration-300 ease-in-out md:hidden ${open ? "max-h-96" : "max-h-0"
-          }`}
+        className={`overflow-hidden transition-[max-height] duration-300 ease-in-out md:hidden ${
+          open ? "max-h-96" : "max-h-0"
+        }`}
       >
         <ul className="flex flex-col gap-6 border-t border-black/10 bg-white px-6 py-6 sm:px-10">
           {LINKS.map((link) => (
@@ -116,7 +133,11 @@ export default function Navbar() {
               target="_blank"
               rel="noopener noreferrer"
               download="CV_DOHOU_Fawase.pdf"
-              className="w-full rounded-full bg-black px-5 py-3 text-[11px] font-bold tracking-widest text-white transition hover:bg-black/85"
+              onClick={() => {
+                handleDownloadCV();
+                setOpen(false);
+              }}
+              className="inline-block w-full text-center rounded-full bg-black px-5 py-3 text-[11px] font-bold tracking-widest text-white transition hover:bg-black/85"
             >
               ME RECRUTER →
             </a>
