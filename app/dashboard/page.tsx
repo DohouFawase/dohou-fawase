@@ -36,9 +36,9 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
     getTrafficByCountry(),
   ]);
 
-  // Max pour les calculs de barres
+  // Max pour les calculs de barres (Utilisation de .views au lieu de .views_count)
   const maxProjectViews = topProjects && topProjects.length > 0 
-    ? Math.max(...topProjects.map((p) => p.views_count || 0), 1) 
+    ? Math.max(...topProjects.map((p) => p.views || 0), 1) 
     : 1;
 
   const maxCountryVisits = countryTraffic && countryTraffic.length > 0
@@ -64,7 +64,7 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
   const recentLogs = (trafic || []).slice(0, 5);
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-8 space-y-8 bg-amber-50 min-h-screen">
       {/* ---------------- EN-TÊTE + FILTRE CHRONO ---------------- */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -95,7 +95,7 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
         </div>
       </div>
 
-      {/* ---------------- 1. Cartes KPI (Pro-Level) ---------------- */}
+      {/* ---------------- 1. Cartes KPI ---------------- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         
         {/* Total Vues du site */}
@@ -138,7 +138,7 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
               </p>
             </div>
             <Link 
-              href="/admin/messages" 
+              href="/dashboard/messages" 
               className="text-xs font-bold text-black underline hover:text-orange-600 transition-colors"
             >
               Voir la boîte →
@@ -175,7 +175,7 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
           {topProjects && topProjects.length > 0 ? (
             <div className="space-y-5">
               {topProjects.map((project) => {
-                const views = project.views_count || 0;
+                const views = project.views || 0; // 👈 Correctement mappé ici
                 const percentage = Math.round((views / maxProjectViews) * 100);
 
                 return (
@@ -243,7 +243,7 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
       {/* ---------------- 3. SECTION BAS : GRAPH + LIVE LOG ---------------- */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        {/* Grand graphique des sections du site (2 cols) */}
+        {/* Graphique des sections */}
         <div className="lg:col-span-2 p-6 bg-white border border-black/10 rounded-xl shadow-sm space-y-6">
           <div className="flex justify-between items-center pb-4 border-b border-gray-100">
             <div>
@@ -282,7 +282,7 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
           )}
         </div>
 
-        {/* Live Activity Feed (1 col) */}
+        {/* Live Activity Feed */}
         <div className="p-6 bg-white border border-black/10 rounded-xl shadow-sm space-y-6">
           <div className="pb-4 border-b border-gray-100 flex justify-between items-center">
             <h2 className="text-lg font-bold text-black">Activité Récente</h2>

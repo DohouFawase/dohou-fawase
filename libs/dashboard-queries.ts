@@ -83,8 +83,8 @@ export async function getTopProjects() {
 
   const { data: projects, error } = await supabase
     .from("projects")
-    .select("id, title, views_count, image_url")
-    .order("views_count", { ascending: false })
+    .select("id, title, views, image_url") // 👈 'views' au lieu de 'views_count'
+    .order("views", { ascending: false })    // 👈 Tri mis à jour
     .limit(5);
 
   if (error) {
@@ -163,4 +163,4 @@ export const handleViewProject = async (projectId: string) => {
   const { createClient: createClientWeb } = await import("@/utils/supabase/client");
   const supabase = createClientWeb();
   await supabase.rpc("increment_project_views", { project_id: projectId });
-}
+};

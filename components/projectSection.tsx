@@ -1,19 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ArrowUpRight, Sparkles } from "lucide-react";
-import { createClient } from "@/utils/supabase/client"; // adapte le chemin à ton projet
+import { ArrowUpRight, Sparkles, Eye } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
 
 type Project = {
   id: string;
   title: string;
   description: string | null;
   image_url: string | null;
-  tech_stack: string[] | null;
+  stack: string[] | string | null;
   project_url: string | null;
   github_url: string | null;
   featured: boolean;
   order: number;
+  views?: number; // 👈 Champ pour le nombre de vues
 };
 
 function BrowserChrome({ url }: { url: string }) {
@@ -46,9 +47,8 @@ function ProjectPreview({ project }: { project: Project }) {
     );
   }
 
-  // Placeholder générique si aucune image n'est encore renseignée
   return (
-    <div className="flex h-full items-center justify-center bg-linear-to-br from-slate-100 to-slate-200">
+    <div className="flex h-full items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
       <span className="text-[11px] font-semibold tracking-widest text-black/25">
         APERÇU À VENIR
       </span>
@@ -80,6 +80,43 @@ export default function Work() {
     fetchProjects();
   }, []);
 
+  // Handler pour incrémenter le nombre de vues au clic
+  const handleProjectClick = async (projectId: string) => {
+    const supabase = createClient();
+
+    // 1. Mise à jour instantanée du state local (UI réactive)
+    setProjects((prev) =>
+      prev.map((p) =>
+        p.id === projectId ? { ...p, views: (p.views ?? 0) + 1 } : p
+      )
+    );
+
+    // 2. Appel de la procédure stockée dans Supabase
+    try {
+      const { error } = await supabase.rpc("increment_project_views", {
+        project_id: projectId,
+      });
+
+      if (error) console.error("Erreur increment_project_views:", error);
+    } catch (err) {
+      console.error("Erreur lors de la mise à jour des vues:", err);
+    }
+  };
+
+  const parseTechStack = (stack: string[] | string | null): string[] => {
+    if (!stack) return [];
+    if (Array.isArray(stack)) return stack;
+    if (typeof stack === "string") {
+      try {
+        const parsed = JSON.parse(stack);
+        if (Array.isArray(parsed)) return parsed;
+      } catch {
+        return stack.split(",").map((s) => s.trim());
+      }
+    }
+    return [];
+  };
+
   return (
     <section className="w-full bg-white text-black" id="projects">
       <div className="mx-auto container border-t border-black/10 px-6 pt-14 pb-24 sm:px-10 lg:px-16">
@@ -107,7 +144,7 @@ export default function Work() {
           mène vers le projet en ligne.
         </p>
 
-        {/* --- ÉTAT : chargement --- */}
+        {/* ÉTAT : chargement */}
         {loading && (
           <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2">
             {[1, 2].map((i) => (
@@ -119,7 +156,7 @@ export default function Work() {
           </div>
         )}
 
-        {/* --- ÉTAT : aucun projet en base --- */}
+        {/* ÉTAT : aucun projet en base */}
         {!loading && projects.length === 0 && (
           <div className="mt-14 flex flex-col items-center justify-center rounded-2xl border border-dashed border-black/15 bg-black/1.5 px-6 py-20 text-center">
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-orange-600/10 text-orange-600">
@@ -135,60 +172,79 @@ export default function Work() {
           </div>
         )}
 
-        {/* --- ÉTAT : projets chargés --- */}
+        {/* ÉTAT : projets chargés */}
         {!loading && projects.length > 0 && (
           <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2">
-            {projects.map((p) => (
-              <a
-                key={p.id}
-                href={p.project_url || p.github_url || "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group overflow-hidden rounded-2xl border border-black/10 bg-black/1.5 transition hover:border-black/20"
-              >
-                {/* aperçu */}
-                <div className="relative h-52 w-full overflow-hidden">
-                  <ProjectPreview project={p} />
-                  {p.featured && (
-                    <span className="absolute left-3 top-3 rounded-full bg-black/70 px-3 py-1 text-[10px] font-semibold tracking-widest text-white backdrop-blur-sm">
-                      EN VEDETTE
-                    </span>
-                  )}
-                </div>
+            {projects.map((p) => {
+              const tags = parseTechStack(p.stack);
 
-                {/* contenu */}
-                <div className="p-7">
-                  <div className="flex items-start justify-between gap-4">
-                    <h3 className="text-xl font-bold text-black">{p.title}</h3>
-                    <ArrowUpRight
-                      className="mt-1 h-4 w-4 shrink-0 text-black/40 transition group-hover:text-orange-600"
-                      strokeWidth={2.5}
-                    />
-                  </div>
-                  {p.description && (
-                    <p className="mt-3 text-[14px] leading-relaxed text-black/60">
-                      {p.description}
-                    </p>
-                  )}
-                  {p.tech_stack && p.tech_stack.length > 0 && (
-                    <div className="mt-5 flex flex-wrap gap-2">
-                      {p.tech_stack.map((tag) => (
-                        <span
-                          key={tag}
-                          className="rounded-full border border-black/12 px-3 py-1 text-[11px] tracking-wide text-black/60"
-                        >
-                          {tag.toUpperCase()}
-                        </span>
-                      ))}
+              return (
+                <a
+                  key={p.id}
+                  href={p.project_url || p.github_url || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => handleProjectClick(p.id)} // 👈 Incrémentation au clic
+                  className="group overflow-hidden rounded-2xl border border-black/10 bg-black/1.5 transition hover:border-black/20"
+                >
+                  {/* aperçu */}
+                  <div className="relative h-52 w-full overflow-hidden">
+                    <ProjectPreview project={p} />
+                    
+                    {/* Badges : VEDETTE à gauche, VUES à droite */}
+                    <div className="absolute inset-x-3 top-3 flex items-center justify-between pointer-events-none">
+                      <div>
+                        {p.featured && (
+                          <span className="rounded-full bg-black/70 px-3 py-1 text-[10px] font-semibold tracking-widest text-white backdrop-blur-sm">
+                            EN VEDETTE
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Badges de vues */}
+                      {/* <span className="inline-flex items-center gap-1.5 rounded-full bg-black/70 px-2.5 py-1 text-[11px] font-medium text-white backdrop-blur-sm">
+                        <Eye className="h-3.5 w-3.5 text-orange-400" />
+                        {p.views ?? 0}
+                      </span> */}
                     </div>
-                  )}
-                </div>
-              </a>
-            ))}
+                  </div>
+
+                  {/* contenu */}
+                  <div className="p-7">
+                    <div className="flex items-start justify-between gap-4">
+                      <h3 className="text-xl font-bold text-black">{p.title}</h3>
+                      <ArrowUpRight
+                        className="mt-1 h-4 w-4 shrink-0 text-black/40 transition group-hover:text-orange-600"
+                        strokeWidth={2.5}
+                      />
+                    </div>
+                    {p.description && (
+                      <p className="mt-3 text-[14px] leading-relaxed text-black/60">
+                        {p.description}
+                      </p>
+                    )}
+
+                    {/* Rendu dynamique du tech stack */}
+                    {tags.length > 0 && (
+                      <div className="mt-5 flex flex-wrap gap-2">
+                        {tags.map((tag, idx) => (
+                          <span
+                            key={`${tag}-${idx}`}
+                            className="rounded-full border border-black/12 px-3 py-1 text-[11px] font-semibold tracking-wide text-black/70 bg-black/3"
+                          >
+                            {tag.toUpperCase()}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </a>
+              );
+            })}
           </div>
         )}
 
-        {/* pied de page de la section */}
+        {/* pied de page */}
         <div className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-black/10 pt-8 sm:flex-row sm:items-center">
           <p className="text-[11px] font-semibold tracking-widest text-black/40">
             MES PROJETS CLIENTS LES PLUS RÉCENTS SONT SOUS NDA.

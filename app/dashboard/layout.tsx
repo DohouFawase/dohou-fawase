@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import "../globals.css";
 import { AuthProvider } from "@/context/AuthProvider";
+import { DashboardNavbar } from "@/components/dashboardNavbar";
 
 
 export const metadata: Metadata = {
@@ -19,8 +20,9 @@ export default function RootLayout({
       lang="en"
       className={` h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col 0">
         <AuthProvider>
+          <DashboardNavbar />
           {children}
         </AuthProvider>
       </body>
