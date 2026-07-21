@@ -17,7 +17,7 @@ export async function replyToMessageAction(
 
   // Envoi de l'email via Resend API
  const { error: emailError } = await resend.emails.send({
-  from: "Acme <onboarding@resend.dev>",
+   from: "Fawase <contact@dohou-fawase.vercel.app>",
   to: [recipientEmail], // Attention: Doit être l'adresse email de ton compte Resend pendant les tests
   subject: replySubject,
   text: replyBody,
