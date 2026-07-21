@@ -1,5 +1,7 @@
 "use client";
 
+import { createClient } from "@/utils/supabase/client";
+
 const SERVICES = [
   {
     n: "01",
@@ -30,7 +32,33 @@ const FACTS = [
   { label: "DISPONIBLE POUR", value: "Freelance & Temps plein" },
 ];
 
+const CV_FILE_PATH = "/resumen/fawase_dohou.pdf";
+const CV_DOWNLOAD_NAME = "CV_DOHOU_Fawase.pdf";
+
 export default function About() {
+  // Enregistrement dans Supabase + Déclenchement du téléchargement
+  const handleDownloadCV = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+
+    // 1. Appel asynchrone Supabase (RPC) en arrière-plan
+    try {
+      const supabase = createClient();
+      supabase.rpc("increment_cv_downloads").then(({ error }) => {
+        if (error) console.error("Erreur RPC CV:", error);
+      });
+    } catch (error) {
+      console.error("Erreur lors de l'incrémentation du compteur CV:", error);
+    }
+
+    // 2. Déclenchement propre du téléchargement côté navigateur
+    const link = document.createElement("a");
+    link.href = CV_FILE_PATH;
+    link.download = CV_DOWNLOAD_NAME;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <section className="w-full bg-white text-black" id="about">
       <div className="mx-auto container px-6 pt-14 pb-24 sm:px-10 lg:px-16">
@@ -77,6 +105,17 @@ export default function About() {
                 de vie d&apos;un produit, de l&apos;identité visuelle à l&apos;architecture technique,
                 tout en ayant les yeux rivés sur votre rentabilité, discutons-en.
               </p>
+            </div>
+
+            {/* Téléchargement CV CTA */}
+            <div className="mt-8">
+              <a
+                href={CV_FILE_PATH}
+                onClick={handleDownloadCV}
+                className="inline-flex items-center gap-2 rounded-full bg-black px-6 py-3 text-[12px] font-bold tracking-widest text-white transition hover:bg-black/85"
+              >
+                TÉLÉCHARGER MON CV <span>↓</span>
+              </a>
             </div>
 
             {/* facts table */}

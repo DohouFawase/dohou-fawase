@@ -82,7 +82,7 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
           ].map((period) => (
             <Link
               key={period.value}
-              href={`/admin/dashboard?period=${period.value}`}
+              href={`/dashboard?period=${period.value}`}
               className={`px-3 py-1.5 rounded-md transition-all ${
                 currentPeriod === period.value
                   ? "bg-white text-black shadow-sm font-bold"

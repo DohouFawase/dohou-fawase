@@ -14,7 +14,7 @@ export default async function AdminSkillsPage() {
     return (
         <>
 
-            <div className="p-8  space-y-8 bg-amber-50 h-screen">
+            <div className="p-8  space-y-8 bg-amber-50 min-h-screen">
 
                 <SkillsTableClient initialSkills={skills || []} />;
 

@@ -16,7 +16,7 @@ export default async function AdminExperiencesPage() {
      return (
             <>
     
-                <div className="p-8  space-y-8 bg-amber-50 h-screen">
+                <div className="p-8  space-y-8 bg-amber-50 min-h-screen">
     
                     <ExperiencesTableClient initialExperiences={experiences || []} />;
     

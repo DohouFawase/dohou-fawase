@@ -12,18 +12,37 @@ const LINKS = [
   { label: "CONTACT", href: "#contact" },
 ];
 
+const CV_FILE_PATH = "/resumen/fawase_dohou.pdf";
+const CV_DOWNLOAD_NAME = "CV_DOHOU_Fawase.pdf";
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const { user, loading } = useAuth();
 
-  // Fonction pour enregistrer le téléchargement dans Supabase
-  const handleDownloadCV = async () => {
+  // Enregistrement dans Supabase + Déclenchement du téléchargement
+  const handleDownloadCV = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+
+    // 1. Appel asynchrone Supabase (RPC) en arrière-plan
     try {
       const supabase = createClient();
-      await supabase.rpc("increment_cv_downloads");
+      supabase.rpc("increment_cv_downloads").then(({ error }) => {
+        if (error) console.error("Erreur RPC CV:", error);
+      });
     } catch (error) {
       console.error("Erreur lors de l'incrémentation du compteur CV:", error);
     }
+
+    // 2. Déclenchement propre du téléchargement côté navigateur
+    const link = document.createElement("a");
+    link.href = CV_FILE_PATH;
+    link.download = CV_DOWNLOAD_NAME;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // 3. Fermeture du menu mobile si ouvert
+    if (open) setOpen(false);
   };
 
   return (
@@ -62,10 +81,7 @@ export default function Navbar() {
             </a>
           )}
           <a
-            href="/resumen/fawase_dohou.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            download="CV_DOHOU_Fawase.pdf"
+            href={CV_FILE_PATH}
             onClick={handleDownloadCV}
             className="rounded-full bg-black px-5 py-2.5 text-[11px] font-bold tracking-widest text-white transition hover:bg-black/85"
           >
@@ -129,14 +145,8 @@ export default function Navbar() {
           )}
           <li>
             <a
-              href="/resumen/fawase_dohou.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              download="CV_DOHOU_Fawase.pdf"
-              onClick={() => {
-                handleDownloadCV();
-                setOpen(false);
-              }}
+              href={CV_FILE_PATH}
+              onClick={handleDownloadCV}
               className="inline-block w-full text-center rounded-full bg-black px-5 py-3 text-[11px] font-bold tracking-widest text-white transition hover:bg-black/85"
             >
               ME RECRUTER →

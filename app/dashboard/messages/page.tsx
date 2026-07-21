@@ -14,7 +14,7 @@ export default async function AdminMessagesPage() {
 
     return (
         <>
-            <div className="p-8  space-y-8 bg-amber-50 h-screen">
+            <div className="p-8  space-y-8 bg-amber-50 min-h-screen">
 
                 <MessagesTableClient initialMessages={messages || []} />;
             </div>
