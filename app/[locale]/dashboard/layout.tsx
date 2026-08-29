@@ -1,6 +1,6 @@
 
 import type { Metadata } from "next";
-import "../globals.css";
+import "../../globals.css";
 import { AuthProvider } from "@/context/AuthProvider";
 import { DashboardNavbar } from "@/components/dashboardNavbar";
 

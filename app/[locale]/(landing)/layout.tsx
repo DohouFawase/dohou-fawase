@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "../globals.css";
+import "../../globals.css"
 import { Alpino } from "@/libs/font";
 import Navbar from "@/components/navigation";
 import { AuthProvider } from "@/context/AuthProvider";
@@ -7,7 +7,7 @@ import CtaFooter from "@/components/footer";
 import Script from "next/script";
 import TerminalLoader from "@/components/terminalLoader";
 import { AnalyticsTracker } from "@/components/analytics-tracker";
-
+import { NextIntlClientProvider, hasLocale } from "next-intl";
 const SITE_URL = 'https://dohou.vercel.app';
 export const metadata: Metadata = {
   title: 'Développeur Full-Stack | Dohou Gbenoupko Fawase',

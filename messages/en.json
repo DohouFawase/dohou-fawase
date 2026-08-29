@@ -1,0 +1,100 @@
+{
+  "Navbar": {
+    "about": "ABOUT",
+    "experience": "EXPERIENCE",
+    "skills": "SKILLS",
+    "projects": "PROJECTS",
+    "contact": "CONTACT",
+    "account": "MY ACCOUNT",
+    "login": "LOGIN",
+    "hireMe": "HIRE ME"
+  },
+  "Hero": {
+    "availability": "AVAILABLE FOR FREELANCE & FULL-TIME",
+    "fullName": "DOHOU GBENOUPKO FAWASE — AKA OMO IYA ONIRICE",
+    "titleLine1": "I build products that",
+    "titleLine2": "solve real problems",
+    "titleLine3Prefix": "and",
+    "titleLine3Highlight": "drive growth.",
+    "description": "Software engineer and product builder for startups and companies. I turn complex problems into fast, scalable, AI-powered applications that convert your visitors into customers. From design to frontend, all the way to backend: the goal isn't just to write code, but to measure your success.",
+    "ctaStartProject": "START A PROJECT",
+    "ctaSeeProjects": "SEE MY PROJECTS",
+    "ctaResume": "RESUME / CV",
+    "currentlyLabel": "CURRENTLY",
+    "currentRole": "software engineer @ Avoakaconsulting",
+    "stats": {
+      "delivered": "PRODUCTS SHIPPED",
+      "experience": "YEARS OF EXPERIENCE",
+      "industries": "INDUSTRIES SERVED",
+      "uptime": "HIGH-AVAILABILITY MINDSET"
+    },
+    "tags": {
+      "scalable": "Scalable Systems",
+      "productDesign": "Product Design",
+      "webMobile": "Web & Mobile Development",
+      "branding": "Branding",
+      "ai": "Artificial Intelligence",
+      "saas": "SaaS"
+    }
+  },
+    "About": {
+    "eyebrow": "ABOUT",
+    "headlineLine1": "Products that start with a question",
+    "headlineLine2": "and end up in production.",
+    "bioP1": "My name is DOHOU GBENOUPKO FAWASE, known online as <name>OMO IYA ONIRICE</name>. I solve business problems through code. I sit at the intersection of product, design, and engineering: the kind of profile that can wireframe a flow in the morning and ship the API by evening.",
+    "bioP2": "Over 4+ years, I've designed brands and shipped 8+ web and mobile products for startups in real estate, fintech, and SaaS. I don't just make things look good; I build products that attract users, retain them, and turn attention into revenue.",
+    "bioP3": "If you're looking for someone who can own the full product lifecycle, from visual identity to technical architecture, all while keeping an eye on your bottom line, let's talk.",
+    "downloadCV": "DOWNLOAD MY RESUME",
+    "servicesEyebrow": "WHAT I DO",
+    "facts": {
+      "focus": { "label": "FOCUS", "value": "Problem-solving & growth" },
+      "shipped": { "label": "PRODUCTS SHIPPED", "value": "34+" },
+      "experience": { "label": "EXPERIENCE", "value": "4+ years" },
+      "availableFor": { "label": "AVAILABLE FOR", "value": "Freelance & Full-time" }
+    },
+    "services": {
+      "design": {
+        "title": "Product Design",
+        "desc": "From wireframes to polished, high-converting interfaces designed to turn your visitors into paying customers."
+      },
+      "dev": {
+        "title": "Web & Mobile Development",
+        "desc": "Fast, accessible front-ends paired with robust back-ends in React, Next.js, Laravel, Nest.js, and MySQL, built to sell and to scale."
+      },
+      "branding": {
+        "title": "Branding & Identity",
+        "desc": "Visual systems that make your product feel trustworthy and premium, so your customers buy with confidence."
+      },
+      "architecture": {
+        "title": "Scalable Architecture",
+        "desc": "Technical infrastructure that stays fast and stable as your traffic, revenue, and team grow."
+      }
+    }
+  },
+    "Principles": {
+    "eyebrow": "PRINCIPLES",
+    "headlinePrefix": "The ideas that guide my work",
+    "headlineHighlight": "every day.",
+    "badge": "PRINCIPLE",
+    "items": {
+      "feel": {
+        "title": "Feel is a feature.",
+        "desc": "Latency, motion, fluidity, and rhythm are all part of the product. If an interface feels unpleasant or poorly tuned, it's broken, no matter what the spec says."
+      },
+      "ship": {
+        "title": "Ship small, ship often.",
+        "desc": "The best version of a feature is the one in production today, learning from real users. I'd rather make one careful tweak a week than one ten-page rewrite."
+      },
+      "document": {
+        "title": "Write it down.",
+        "desc": "Code is a form of expression. So are docs, commit messages, and shared write-ups. Clear writing compounds in value and guides the next developer (often, future me)."
+      },
+      "stack": {
+        "title": "Proven tech, sharp taste.",
+        "desc": "I default to Laravel, Next.js, TypeScript, and a small set of trusted tools. I reinvest all the technical complexity that saves directly back into the product experience."
+      }
+    }
+  }
+
+
+}

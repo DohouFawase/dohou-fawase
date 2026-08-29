@@ -1,0 +1,98 @@
+{
+  "Navbar": {
+    "about": "À PROPOS",
+    "experience": "EXPÉRIENCE",
+    "skills": "COMPÉTENCES",
+    "projects": "PROJETS",
+    "contact": "CONTACT",
+    "account": "MON COMPTE",
+    "login": "CONNEXION",
+    "hireMe": "ME RECRUTER"
+  },
+    "Hero": {
+    "availability": "DISPONIBLE EN FREELANCE & CDI",
+    "fullName": "DOHOU GBENOUPKO FAWASE — AKA OMO IYA ONIRICE",
+    "titleLine1": "Je conçois des produits qui",
+    "titleLine2": "résolvent de vrais problèmes",
+    "titleLine3Prefix": "et",
+    "titleLine3Highlight": "génèrent de la croissance.",
+    "description": "Ingénieur logiciel et créateur de produits pour startups et entreprises. Je transforme des problèmes complexes en applications rapides, scalables et dotées d'IA pour convertir vos visiteurs en clients. Du design au frontend, jusqu'au backend : l'objectif n'est pas juste de coder, mais de mesurer votre succès.",
+    "ctaStartProject": "LANCER UN PROJET",
+    "ctaSeeProjects": "VOIR MES PROJETS",
+    "ctaResume": "CV / RÉSUMÉ",
+    "currentlyLabel": "ACTUELLEMENT",
+    "currentRole": "software engineer @ Avoakaconsulting",
+    "stats": {
+      "delivered": "PRODUITS LIVRÉS",
+      "experience": "ANS D'EXPÉRIENCE",
+      "industries": "SECTEURS D'ACTIVITÉ",
+      "uptime": "MINDSET HAUTE DISPO"
+    },
+    "tags": {
+      "scalable": "Systèmes Scalables",
+      "productDesign": "Product Design",
+      "webMobile": "Développement Web & Mobile",
+      "branding": "Branding",
+      "ai": "Intelligence Artificielle",
+      "saas": "SaaS"
+    }
+  },
+   "About": {
+    "eyebrow": "À PROPOS",
+    "headlineLine1": "Des produits qui commencent par une question",
+    "headlineLine2": "et se terminent en production.",
+    "bioP1": "Je m'appelle DOHOU GBENOUPKO FAWASE, connu en ligne sous le nom de <name>OMO IYA ONIRICE</name>. Je résous des problèmes business grâce au code. Je me situe à l'intersection du produit, du design et de l'ingénierie : le genre de profil capable de maquetter un flux le matin et de déployer l'API le soir même.",
+    "bioP2": "En plus de 4 ans, j'ai conçu des marques et livré plus de 8 produits web et mobiles pour des startups dans l'immobilier, la fintech et le SaaS. Je ne me contente pas de faire du joli ; je construis des produits qui attirent les utilisateurs, les fidélisent et transforment l'attention en chiffre d'affaires.",
+    "bioP3": "Si vous cherchez quelqu'un capable de piloter l'ensemble du cycle de vie d'un produit, de l'identité visuelle à l'architecture technique, tout en ayant les yeux rivés sur votre rentabilité, discutons-en.",
+    "downloadCV": "TÉLÉCHARGER MON CV",
+    "servicesEyebrow": "CE QUE JE FAIS",
+    "facts": {
+      "focus": { "label": "FOCUS", "value": "Résolution de problèmes & croissance" },
+      "shipped": { "label": "PRODUITS LIVRÉS", "value": "34+" },
+      "experience": { "label": "EXPÉRIENCE", "value": "4+ ans" },
+      "availableFor": { "label": "DISPONIBLE POUR", "value": "Freelance & Temps plein" }
+    },
+    "services": {
+      "design": {
+        "title": "Design de Produit",
+        "desc": "Des wireframes aux interfaces soignées et hautement convertissantes, conçues pour transformer vos visiteurs en clients payants."
+      },
+      "dev": {
+        "title": "Développement Web & Mobile",
+        "desc": "Des front-ends rapides et accessibles combinés à des back-ends robustes en React, Next.js, Laravel, Nest.js et Mysql, taillés pour vendre et évoluer."
+      },
+      "branding": {
+        "title": "Branding & Identité",
+        "desc": "Des systèmes visuels qui rendent votre produit fiable et haut de gamme, pour que vos clients achètent en toute confiance."
+      },
+      "architecture": {
+        "title": "Architectures Évolutives",
+        "desc": "Une infrastructure technique qui reste rapide et stable à mesure que votre trafic, vos revenus et vos équipes grandissent."
+      }
+    }
+  },
+  "Principles": {
+    "eyebrow": "PRINCIPES",
+    "headlinePrefix": "Les idées qui guident mon travail",
+    "headlineHighlight": "au quotidien.",
+    "badge": "PRINCIPE",
+    "items": {
+      "feel": {
+        "title": "Le ressenti est une fonctionnalité.",
+        "desc": "La latence, le mouvement, la fluidité et le rythme font partie intégrante du produit. Si une interface semble désagréable ou mal calibrée, elle est ratée, peu importe ce que dit le cahier des charges."
+      },
+      "ship": {
+        "title": "Livrer petit, livrer souvent.",
+        "desc": "La meilleure version d'une fonctionnalité est celle qui est en production aujourd'hui et qui apprend des vrais utilisateurs. Je préfère un ajustement minutieux par semaine à une réécriture complète de dix pages."
+      },
+      "document": {
+        "title": "Documenter par écrit.",
+        "desc": "Le code est un moyen d'expression. La documentation, les messages de commit et les partages d'expérience le sont tout autant. Une rédaction claire apporte une valeur exponentielle et guide le prochain développeur (souvent, mon futur moi)."
+      },
+      "stack": {
+        "title": "Technos éprouvées, goût affûté.",
+        "desc": "Je privilégie par défaut Laravel, Next.js, TypeScript et un ensemble restreint d'outils de confiance. Je réinvestis ensuite toute cette complexité technique économisée directement dans l'expérience du produit."
+      }
+    }
+  }
+}
