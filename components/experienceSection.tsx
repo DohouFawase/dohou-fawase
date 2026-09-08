@@ -66,7 +66,7 @@ export default function Experience() {
         <h2 className="max-w-5xl text-[2.4rem] font-extrabold leading-[1.1] tracking-tight text-black sm:text-5xl">
           Quatre ans, cinq postes{" "}
           <span className="font-serif italic text-orange-600">
-            et toujours en apprentissage.
+            et une progression constante.
           </span>
         </h2>
 

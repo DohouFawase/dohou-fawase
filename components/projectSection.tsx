@@ -134,7 +134,7 @@ export default function Work() {
         <h2 className="max-w-3xl text-[2.4rem] font-extrabold leading-[1.1] tracking-tight text-black sm:text-5xl">
           Quelques réalisations{" "}
           <span className="font-serif italic text-orange-600">
-            le reste est sous accord de confidentialité (NDA).
+            le reste est soumis à confidentialité (NDA).
           </span>
         </h2>
 
@@ -166,7 +166,7 @@ export default function Work() {
               Les projets arrivent bientôt
             </h3>
             <p className="mt-2 max-w-sm text-[14px] leading-relaxed text-black/50">
-              Cette section est en cours de construction. Repassez très vite
+              Cette section est en cours de construction. Revenez très vite
               pour découvrir mes dernières réalisations.
             </p>
           </div>
@@ -191,7 +191,7 @@ export default function Work() {
                   <div className="relative h-52 w-full overflow-hidden">
                     <ProjectPreview project={p} />
                     
-                    {/* Badges : VEDETTE à gauche, VUES à droite */}
+                    {/* Badges : en vedette à gauche, vues à droite */}
                     <div className="absolute inset-x-3 top-3 flex items-center justify-between pointer-events-none">
                       <div>
                         {p.featured && (
@@ -255,7 +255,7 @@ export default function Work() {
             rel="noopener noreferrer"
             className="text-[11px] font-bold tracking-widest text-black underline underline-offset-4"
           >
-            VOIR PLUS SUR GITHUB →
+            DÉCOUVRIR PLUS SUR GITHUB →
           </a>
         </div>
       </div>

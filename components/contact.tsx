@@ -26,7 +26,7 @@ export default function Contact() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Presse-papier non disponible
+      // Presse-papiers indisponible
     }
   };
 
@@ -72,12 +72,12 @@ export default function Contact() {
       setSent(true);
       setForm({ email: "", subject: "", message: "" });
     } catch (mailError) {
-      console.error("Erreur d'envoi d'email via API:", mailError);
-      // On rassure l'utilisateur car la donnée est déjà stockée en base de données !
+      console.error("Erreur d'envoi d'e-mail via API:", mailError);
+      // On rassure l'utilisateur : la donnée est déjà stockée en base de données.
       setError(
-        "Votre message a bien été enregistré en base de données, mais un problème technique a empêché l'envoi de la notification mail. Soyez serein, j'y ai quand même accès !"
+        "Votre message a bien été enregistré en base de données, mais un problème technique a empêché l'envoi de la notification e-mail. Soyez serein, j'y ai quand même accès !"
       );
-      setSent(true); // On valide quand même visuellement l'envoi
+      setSent(true);
     } finally {
       setSending(false);
     }
@@ -99,7 +99,7 @@ export default function Contact() {
 
         {/* Titre principal */}
         <h2 className="max-w-4xl text-[2.4rem] font-extrabold leading-[1.1] tracking-tight text-black sm:text-5xl">
-          Un projet qui mérite d&apos;être créé ?{" "}
+          Un projet qui mérite d&apos;être construit ?{" "}
           <span className="font-serif italic text-orange-600">
             Parlons-en.
           </span>
@@ -107,7 +107,7 @@ export default function Contact() {
 
         {/* Introduction */}
         <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-black/60">
-          Projets freelance, opportunités en CDI ou collaborations de produits. Je réponds généralement sous 24 heures.
+          Projets freelance, opportunités en CDI ou collaborations produit. Je réponds généralement sous 24 heures.
         </p>
 
         {/* Grille de contenu */}
@@ -164,7 +164,7 @@ export default function Contact() {
                   htmlFor="email"
                   className="text-[10px] font-semibold tracking-widest text-black/40"
                 >
-                  VOTRE EMAIL
+                  VOTRE E-MAIL
                 </label>
                 <input
                   id="email"
@@ -189,7 +189,7 @@ export default function Contact() {
                 <input
                   id="subject"
                   type="text"
-                  placeholder="Un poste, un projet, un bonjour"
+                  placeholder="Un poste, un projet, un simple bonjour"
                   value={form.subject}
                   onChange={(e) =>
                     setForm({ ...form, subject: e.target.value })
@@ -211,7 +211,7 @@ export default function Contact() {
                   id="message"
                   required
                   rows={3}
-                  placeholder="Dites-m'en un peu plus sur ce que vous préparez."
+                  placeholder="Dites-moi en un peu plus sur ce que vous préparez."
                   value={form.message}
                   onChange={(e) =>
                     setForm({ ...form, message: e.target.value })

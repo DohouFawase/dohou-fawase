@@ -10,12 +10,12 @@ const STEPS = [
   },
   {
     n: "02",
-    title: "Concevoir & bâtir la solution",
-    desc: "Je conçois des interfaces épurées et à fort taux de conversion, adossées à des systèmes évolutifs, pour que le produit ait un rendu premium et tienne la charge durant votre croissance.",
+    title: "Concevoir et bâtir la solution",
+    desc: "Je conçois des interfaces épurées et à fort potentiel de conversion, adossées à des systèmes évolutifs, pour offrir un rendu premium tout en supportant votre croissance.",
   },
   {
     n: "03",
-    title: "Déployer, mesurer, rentabiliser",
+    title: "Déployer, mesurer et rentabiliser",
     desc: "Je livre rapidement, j'observe le comportement des utilisateurs réels et j'itère sur ce qui fait bouger les indicateurs clés : inscriptions, rétention et chiffre d'affaires.",
   },
 ];

@@ -49,7 +49,7 @@ export default function Stack() {
 
         {/* titre principal */}
         <h2 className="max-w-3xl text-[2.4rem] font-extrabold leading-[1.1] tracking-tight text-black sm:text-5xl">
-          Les outils que j&lsquo;utilise{" "}
+          Les outils que j&apos;utilise{" "}
           <span className="font-serif italic text-orange-600">
             au quotidien pour résoudre vos défis.
           </span>
@@ -57,7 +57,7 @@ export default function Stack() {
 
         {/* introduction */}
         <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-black/60">
-          Les technologies évoluent, l&apos;essentiel reste l&apos;impact. J&apos;adapte toujours ma stack
+          Les technologies évoluent, mais l&apos;essentiel reste l&apos;impact. J&apos;adapte toujours ma stack
           technologique aux besoins réels du produit, et non l&apos;inverse.
         </p>
 

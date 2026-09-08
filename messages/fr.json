@@ -10,30 +10,30 @@
     "hireMe": "ME RECRUTER"
   },
     "Hero": {
-    "availability": "DISPONIBLE EN FREELANCE & CDI",
+    "availability": "DISPONIBLE EN FREELANCE ET EN CDI",
     "fullName": "DOHOU GBENOUPKO FAWASE — AKA OMO IYA ONIRICE",
-    "titleLine1": "Je conçois des produits qui",
+    "titleLine1": "Je crée des produits qui",
     "titleLine2": "résolvent de vrais problèmes",
     "titleLine3Prefix": "et",
-    "titleLine3Highlight": "génèrent de la croissance.",
-    "description": "Ingénieur logiciel et créateur de produits pour startups et entreprises. Je transforme des problèmes complexes en applications rapides, scalables et dotées d'IA pour convertir vos visiteurs en clients. Du design au frontend, jusqu'au backend : l'objectif n'est pas juste de coder, mais de mesurer votre succès.",
-    "ctaStartProject": "LANCER UN PROJET",
+    "titleLine3Highlight": "favorisent la croissance.",
+    "description": "Ingénieur logiciel et product builder pour startups et entreprises. Je transforme des problèmes complexes en applications rapides, évolutives et pilotées par l'IA pour convertir vos visiteurs en clients. Du design au frontend, jusqu'au backend : l'objectif n'est pas seulement d'écrire du code, mais de mesurer votre succès.",
+    "ctaStartProject": "DÉMARRER UN PROJET",
     "ctaSeeProjects": "VOIR MES PROJETS",
     "ctaResume": "CV / RÉSUMÉ",
     "currentlyLabel": "ACTUELLEMENT",
-    "currentRole": "software engineer @ Avoakaconsulting",
+    "currentRole": "ingénieur logiciel @ Avoakaconsulting",
     "stats": {
       "delivered": "PRODUITS LIVRÉS",
-      "experience": "ANS D'EXPÉRIENCE",
+      "experience": "ANNÉES D'EXPÉRIENCE",
       "industries": "SECTEURS D'ACTIVITÉ",
-      "uptime": "MINDSET HAUTE DISPO"
+      "uptime": "MINDSET HAUTE DISPONIBILITÉ"
     },
     "tags": {
-      "scalable": "Systèmes Scalables",
-      "productDesign": "Product Design",
-      "webMobile": "Développement Web & Mobile",
+      "scalable": "Systèmes évolutifs",
+      "productDesign": "Design produit",
+      "webMobile": "Développement web & mobile",
       "branding": "Branding",
-      "ai": "Intelligence Artificielle",
+      "ai": "Intelligence artificielle",
       "saas": "SaaS"
     }
   },
@@ -41,9 +41,9 @@
     "eyebrow": "À PROPOS",
     "headlineLine1": "Des produits qui commencent par une question",
     "headlineLine2": "et se terminent en production.",
-    "bioP1": "Je m'appelle DOHOU GBENOUPKO FAWASE, connu en ligne sous le nom de <name>OMO IYA ONIRICE</name>. Je résous des problèmes business grâce au code. Je me situe à l'intersection du produit, du design et de l'ingénierie : le genre de profil capable de maquetter un flux le matin et de déployer l'API le soir même.",
-    "bioP2": "En plus de 4 ans, j'ai conçu des marques et livré plus de 8 produits web et mobiles pour des startups dans l'immobilier, la fintech et le SaaS. Je ne me contente pas de faire du joli ; je construis des produits qui attirent les utilisateurs, les fidélisent et transforment l'attention en chiffre d'affaires.",
-    "bioP3": "Si vous cherchez quelqu'un capable de piloter l'ensemble du cycle de vie d'un produit, de l'identité visuelle à l'architecture technique, tout en ayant les yeux rivés sur votre rentabilité, discutons-en.",
+    "bioP1": "Je m'appelle DOHOU GBENOUPKO FAWASE, connu en ligne sous le nom de <name>OMO IYA ONIRICE</name>. Je résous des problèmes métier grâce au code. Je me situe à l'intersection du produit, du design et de l'ingénierie : le genre de profil capable de maquetter un flux le matin et de livrer l'API le soir même.",
+    "bioP2": "Au fil de plus de 4 ans, j'ai conçu des marques et livré plus de 8 produits web et mobiles pour des startups de l'immobilier, de la fintech et du SaaS. Je ne me contente pas de faire du joli ; je construit des produits qui attirent les utilisateurs, les fidélisent et transforment l'attention en chiffre d'affaires.",
+    "bioP3": "Si vous cherchez quelqu'un capable de piloter l'ensemble du cycle de vie d'un produit, de l'identité visuelle à l'architecture technique, tout en gardant un œil sur votre rentabilité, parlons-en.",
     "downloadCV": "TÉLÉCHARGER MON CV",
     "servicesEyebrow": "CE QUE JE FAIS",
     "facts": {
@@ -54,20 +54,20 @@
     },
     "services": {
       "design": {
-        "title": "Design de Produit",
+        "title": "Design produit",
         "desc": "Des wireframes aux interfaces soignées et hautement convertissantes, conçues pour transformer vos visiteurs en clients payants."
       },
       "dev": {
-        "title": "Développement Web & Mobile",
-        "desc": "Des front-ends rapides et accessibles combinés à des back-ends robustes en React, Next.js, Laravel, Nest.js et Mysql, taillés pour vendre et évoluer."
+        "title": "Développement web & mobile",
+        "desc": "Des front-ends rapides et accessibles, associés à des back-ends robustes en React, Next.js, Laravel, Nest.js et MySQL, conçus pour vendre et évoluer."
       },
       "branding": {
-        "title": "Branding & Identité",
-        "desc": "Des systèmes visuels qui rendent votre produit fiable et haut de gamme, pour que vos clients achètent en toute confiance."
+        "title": "Branding & identité",
+        "desc": "Des systèmes visuels qui rendent votre produit fiable et premium, afin que vos clients achètent en toute confiance."
       },
       "architecture": {
-        "title": "Architectures Évolutives",
-        "desc": "Une infrastructure technique qui reste rapide et stable à mesure que votre trafic, vos revenus et vos équipes grandissent."
+        "title": "Architecture évolutive",
+        "desc": "Une infrastructure technique rapide et stable, qui suit la croissance de votre trafic, de vos revenus et de votre équipe."
       }
     }
   },

@@ -27,7 +27,7 @@ export default function CtaFooter() {
                         CONSTRUISONS QUELQUE CHOSE ENSEMBLE
                     </p>
                     <h2 className="mx-auto mt-4 max-w-2xl text-[2.1rem] font-extrabold leading-tight tracking-tight text-black sm:text-4xl">
-                        Vous avez un produit en tête ? Je peux vous aider à le concevoir et le livrer.
+                        Vous avez un produit en tête ? Je peux vous aider à le concevoir puis à le livrer.
                     </h2>
 
                     <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
@@ -82,9 +82,9 @@ export default function CtaFooter() {
 
                     <div className="mt-8 flex flex-col gap-2 border-t border-black/10 py-6 text-[11px] font-semibold tracking-widest text-black/35 sm:flex-row sm:items-center sm:justify-between">
                         <p>
-                            © {currentYear} GBENOUPKO FAWASE DOHOu · OMO IYA ONIRICE. TOUS DROITS RÉSERVÉS.
+                            © {currentYear} GBENOUPKO FAWASE DOHOU · OMO IYA ONIRICE. TOUS DROITS RÉSERVÉS.
                         </p>
-                        <p>CONSTRUIT AVEC NEXT.JS · BÉNIN</p>
+                        <p>CONSTRUIT AVEC NEXT.JS · BIEN</p>
                     </div>
                 </footer>
             </div>
