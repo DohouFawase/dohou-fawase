@@ -1,15 +1,77 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Link from "next/link";
+import { TrafficChart, type TrafficPoint } from "@/app/dashboard/components/TrafficChart";
 import { 
   getTraficStats, 
   getTopProjects, 
   getUnreadMessagesCount, 
   getCVDownloadCount,
   getTotalViewsCount,
-  getTrafficByCountry
+  getTrafficByCountry,
+  type TrafficEntry,
 } from "@/libs/dashboard-queries";
 
 export const dynamic = "force-dynamic";
+
+function getTrafficChartData(entries: TrafficEntry[], period: string): TrafficPoint[] {
+  const now = new Date();
+
+  if (period === "all") {
+    const firstMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 11, 1));
+    const monthlyCounts = new Map<string, number>();
+
+    for (let index = 0; index < 12; index += 1) {
+      const month = new Date(Date.UTC(firstMonth.getUTCFullYear(), firstMonth.getUTCMonth() + index, 1));
+      monthlyCounts.set(`${month.getUTCFullYear()}-${month.getUTCMonth()}`, 0);
+    }
+
+    entries.forEach((entry) => {
+      const date = new Date(entry.created_at);
+      const monthKey = `${date.getUTCFullYear()}-${date.getUTCMonth()}`;
+      if (monthlyCounts.has(monthKey)) {
+        monthlyCounts.set(monthKey, (monthlyCounts.get(monthKey) ?? 0) + 1);
+      }
+    });
+
+    return Array.from(monthlyCounts, ([key, value]) => {
+      const [year, month] = key.split("-").map(Number);
+      const date = new Date(Date.UTC(year, month, 1));
+      return {
+        label: date.toLocaleDateString("fr-FR", {
+          month: "short",
+          year: "2-digit",
+          timeZone: "UTC",
+        }),
+        value,
+      };
+    });
+  }
+
+  const bucketSize = period === "24h" ? 60 * 60 * 1000 : 24 * 60 * 60 * 1000;
+  const bucketCount = period === "24h" ? 24 : period === "7d" ? 7 : 30;
+  const startTime = now.getTime() - bucketCount * bucketSize;
+  const counts = Array.from({ length: bucketCount }, () => 0);
+
+  entries.forEach((entry) => {
+    const bucket = Math.floor((new Date(entry.created_at).getTime() - startTime) / bucketSize);
+    if (bucket >= 0 && bucket < bucketCount) {
+      counts[bucket] += 1;
+    }
+  });
+
+  return counts.map((value, index) => {
+    const date = new Date(startTime + index * bucketSize);
+    const label =
+      period === "24h"
+        ? date.toLocaleTimeString("fr-FR", { hour: "2-digit", timeZone: "UTC" })
+        : date.toLocaleDateString("fr-FR", {
+            day: "2-digit",
+            month: "short",
+            timeZone: "UTC",
+          });
+
+    return { label, value };
+  });
+}
 
 interface PageProps {
   searchParams: Promise<{ period?: string }>;
@@ -17,7 +79,10 @@ interface PageProps {
 
 export default async function AdminDashboardPage({ searchParams }: PageProps) {
   const resolvedParams = await searchParams;
-  const currentPeriod = resolvedParams.period || "all";
+  const requestedPeriod = resolvedParams.period || "all";
+  const currentPeriod = ["all", "30d", "7d", "24h"].includes(requestedPeriod)
+    ? requestedPeriod
+    : "all";
 
   // Chargement en parallèle des statistiques
   const [
@@ -28,12 +93,12 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
     totalViews, 
     countryTraffic
   ] = await Promise.all([
-    getTraficStats(),
+    getTraficStats(currentPeriod),
     getTopProjects(),
     getUnreadMessagesCount(),
     getCVDownloadCount(),
-    getTotalViewsCount(),
-    getTrafficByCountry(),
+    getTotalViewsCount(currentPeriod),
+    getTrafficByCountry(currentPeriod),
   ]);
 
   // Max pour les calculs de barres (Utilisation de .views au lieu de .views_count)
@@ -46,7 +111,7 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
     : 1;
 
   // Calcul des sections
-  const sectionsData = (trafic || []).reduce((acc: Record<string, number>, item: any) => {
+  const sectionsData = trafic.reduce<Record<string, number>>((acc, item) => {
     const key = item.section || item.path || "Accueil (Hero)";
     acc[key] = (acc[key] || 0) + 1;
     return acc;
@@ -60,8 +125,9 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
     ? Math.max(...sectionsList.map((s) => s.count), 1) 
     : 1;
 
-  // Simulation des dernières activités à partir du trafic récent
-  const recentLogs = (trafic || []).slice(0, 5);
+  const recentLogs = trafic.slice(0, 5);
+  const trafficChartData = getTrafficChartData(trafic, currentPeriod);
+  const mostVisitedSection = sectionsList[0];
 
   return (
     <div className="p-8 space-y-8 bg-amber-50 min-h-screen">
@@ -69,7 +135,7 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-black">Dashboard Analytique</h1>
-          <p className="text-sm text-gray-500 mt-1">Vue d'ensemble de l'activité de ton portfolio.</p>
+          <p className="text-sm text-gray-500 mt-1">Vue d’ensemble de l’activité de ton portfolio.</p>
         </div>
 
         {/* Filtres Temporels */}
@@ -96,22 +162,19 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
       </div>
 
       {/* ---------------- 1. Cartes KPI ---------------- */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
         
         {/* Total Vues du site */}
         <div className="p-6 bg-white border border-black/10 rounded-xl shadow-sm space-y-3">
           <div className="flex justify-between items-center">
             <p className="text-xs font-bold tracking-wider text-gray-400 uppercase">Total Vues du Site</p>
-            <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">
-              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
-              </svg>
-              En hausse
+            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
+              {currentPeriod === "all" ? "Tout l’historique" : "Période sélectionnée"}
             </span>
           </div>
           <div>
             <p className="text-3xl font-extrabold text-black">{totalViews}</p>
-            <p className="text-xs text-gray-400 mt-1">Visites enregistrées sur le site</p>
+            <p className="text-xs text-gray-400 mt-1">Visites enregistrées sur la période</p>
           </div>
         </div>
 
@@ -150,27 +213,63 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
         <div className="p-6 bg-white border border-black/10 rounded-xl shadow-sm space-y-3">
           <div className="flex justify-between items-center">
             <p className="text-xs font-bold tracking-wider text-gray-400 uppercase">Téléchargements CV</p>
-            <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">
-              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
-              </svg>
-              Actif
+            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
+              Cumul
             </span>
           </div>
           <div>
             <p className="text-3xl font-extrabold text-black">{cvDownloads}</p>
-            <p className="text-xs text-gray-400 mt-1">Intérêt direct des recruteurs</p>
+            <p className="text-xs text-gray-400 mt-1">Depuis la mise en ligne du site</p>
           </div>
+        </div>
+
+        <div className="p-6 bg-white border border-black/10 rounded-xl shadow-sm space-y-3">
+          <div className="flex justify-between items-center gap-2">
+            <p className="text-xs font-bold tracking-wider text-gray-400 uppercase">Section la plus consultée</p>
+            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-orange-50 text-orange-700 whitespace-nowrap">
+              Période choisie
+            </span>
+          </div>
+          {mostVisitedSection ? (
+            <div>
+              <p className="text-2xl font-extrabold text-black capitalize truncate">
+                {mostVisitedSection.name.replace("/", "").replace("-", " ") || "Accueil"}
+              </p>
+              <p className="text-xs text-gray-400 mt-1">
+                {mostVisitedSection.count} consultation{mostVisitedSection.count > 1 ? "s" : ""}
+              </p>
+            </div>
+          ) : (
+            <p className="text-sm text-gray-400 italic">Aucune donnée sur cette période.</p>
+          )}
         </div>
 
       </div>
 
-      {/* ---------------- 2. Grille Intermédiaire (Projets & Pays) ---------------- */}
+      {/* ---------------- 2. Évolution du trafic ---------------- */}
+      <div className="p-6 bg-white border border-black/10 rounded-xl shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
+          <div>
+            <h2 className="text-lg font-bold text-black">Évolution du trafic</h2>
+            <p className="text-xs text-gray-500">
+              Consultations par {currentPeriod === "24h" ? "heure" : currentPeriod === "all" ? "mois" : "jour"}.
+              {currentPeriod === "all" ? " Affichage des 12 derniers mois." : ""}
+            </p>
+          </div>
+          <p className="text-xs text-gray-500">
+            {trafic.length} événement{trafic.length > 1 ? "s" : ""} suivi{trafic.length > 1 ? "s" : ""}
+          </p>
+        </div>
+        <TrafficChart data={trafficChartData} />
+      </div>
+
+      {/* ---------------- 3. Grille Intermédiaire (Projets & Pays) ---------------- */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         {/* Projets les plus vus */}
         <div className="p-6 bg-white border border-black/10 rounded-xl shadow-sm">
-          <h2 className="text-lg font-bold text-black mb-6">Projets les plus vus</h2>
+          <h2 className="text-lg font-bold text-black mb-1">Projets les plus vus</h2>
+          <p className="text-xs text-gray-500 mb-6">Classement depuis la mise en ligne du site.</p>
           
           {topProjects && topProjects.length > 0 ? (
             <div className="space-y-5">
@@ -240,15 +339,15 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
 
       </div>
 
-      {/* ---------------- 3. SECTION BAS : GRAPH + LIVE LOG ---------------- */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* ---------------- 4. Sections consultées et activité récente ---------------- */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
-        {/* Graphique des sections */}
-        <div className="lg:col-span-2 p-6 bg-white border border-black/10 rounded-xl shadow-sm space-y-6">
+        {/* Classement des sections */}
+        <div className="p-6 bg-white border border-black/10 rounded-xl shadow-sm space-y-6">
           <div className="flex justify-between items-center pb-4 border-b border-gray-100">
             <div>
-              <h2 className="text-lg font-bold text-black">Analyse Globale des Sections</h2>
-              <p className="text-xs text-gray-500">Comportement de navigation des visiteurs.</p>
+              <h2 className="text-lg font-bold text-black">Sections les plus consultées</h2>
+              <p className="text-xs text-gray-500">Classement pour la période choisie.</p>
             </div>
             <span className="text-xs font-bold text-black px-2.5 py-1 bg-gray-100 rounded-md">
               {sectionsList.length} sections
@@ -257,7 +356,7 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
 
           {sectionsList.length > 0 ? (
             <div className="space-y-5">
-              {sectionsList.map((sec) => {
+              {sectionsList.slice(0, 6).map((sec) => {
                 const pct = Math.round((sec.count / maxSectionVisits) * 100);
                 return (
                   <div key={sec.name} className="space-y-1.5">
@@ -282,7 +381,7 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
           )}
         </div>
 
-        {/* Live Activity Feed */}
+        {/* Activité récente */}
         <div className="p-6 bg-white border border-black/10 rounded-xl shadow-sm space-y-6">
           <div className="pb-4 border-b border-gray-100 flex justify-between items-center">
             <h2 className="text-lg font-bold text-black">Activité Récente</h2>
@@ -294,8 +393,8 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
 
           {recentLogs.length > 0 ? (
             <div className="space-y-4">
-              {recentLogs.map((log: any, idx: number) => (
-                <div key={idx} className="flex gap-3 items-start text-xs">
+              {recentLogs.map((log, idx: number) => (
+                <div key={`${log.created_at}-${idx}`} className="flex gap-3 items-start text-xs">
                   <div className="p-1.5 rounded-full bg-orange-50 text-orange-600 mt-0.5">
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />

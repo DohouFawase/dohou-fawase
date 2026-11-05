@@ -76,7 +76,7 @@ export function DashboardNavbar({ unreadCount = 0 }: DashboardNavbarProps) {
     { label: "24h", value: "24h" },
   ];
 
-  const isDashboardPage = pathname === "/dashboard/dashboard";
+  const isDashboardPage = pathname === "/dashboard";
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-black/10 bg-white/80 backdrop-blur-md">
@@ -86,7 +86,7 @@ export function DashboardNavbar({ unreadCount = 0 }: DashboardNavbarProps) {
           {/* LOGO BRAND */}
           <div className="flex items-center gap-3 shrink-0">
             <Link
-              href="/admin/dashboard"
+              href="/dashboard"
               className="flex items-center gap-2 text-black font-extrabold text-lg tracking-tight hover:opacity-80 transition-opacity"
             >
               <div className="p-2 bg-black text-white rounded-xl shadow-sm">
@@ -133,7 +133,7 @@ export function DashboardNavbar({ unreadCount = 0 }: DashboardNavbarProps) {
                 {periods.map((p) => (
                   <Link
                     key={p.value}
-                    href={`/admin/dashboard?tab=${currentTab}&period=${p.value}`}
+                    href={`/dashboard?tab=${currentTab}&period=${p.value}`}
                     className={`px-2 py-0.5 rounded-md font-medium transition-colors ${
                       currentPeriod === p.value
                         ? "bg-black text-white font-bold"
@@ -241,7 +241,7 @@ export function DashboardNavbar({ unreadCount = 0 }: DashboardNavbarProps) {
                 {periods.map((p) => (
                   <Link
                     key={p.value}
-                    href={`/admin/dashboard?tab=${currentTab}&period=${p.value}`}
+                    href={`/dashboard?tab=${currentTab}&period=${p.value}`}
                     onClick={() => setMobileMenuOpen(false)}
                     className={`text-center py-1.5 rounded-md text-xs font-semibold ${
                       currentPeriod === p.value

@@ -1,5 +1,12 @@
 import { createClient } from "@/utils/supabase/server";
 
+export interface TrafficEntry {
+  created_at: string;
+  country: string | null;
+  path: string | null;
+  section: string | null;
+}
+
 // Helper interne pour calculer le filtre de date selon le paramètre 'period'
 function getStartDateISO(period?: string): string | null {
   const now = new Date();
@@ -30,14 +37,14 @@ export async function getCVDownloadCount() {
 
   if (error) {
     console.error("Erreur getCVDownloadCount:", error);
-    return 0;
+    throw new Error("Impossible de charger le nombre de téléchargements du CV.");
   }
 
-  return data?.value ?? 0;
+  return Number(data?.value ?? 0);
 }
 
 // 2. Statistiques de trafic avec détail (Supporte le filtre de période)
-export async function getTraficStats(period?: string) {
+export async function getTraficStats(period?: string): Promise<TrafficEntry[]> {
   const supabase = await createClient();
   const startDate = getStartDateISO(period);
 
@@ -54,10 +61,10 @@ export async function getTraficStats(period?: string) {
 
   if (error) {
     console.error("Erreur getTraficStats:", error);
-    return [];
+    throw new Error("Impossible de charger les statistiques de trafic.");
   }
 
-  return data || [];
+  return (data || []) as TrafficEntry[];
 }
 
 // 3. Nombre de messages non lus
@@ -71,7 +78,7 @@ export async function getUnreadMessagesCount() {
 
   if (error) {
     console.error("Erreur getUnreadMessagesCount:", error);
-    return 0;
+    throw new Error("Impossible de charger le nombre de messages non lus.");
   }
 
   return count || 0;
@@ -89,7 +96,7 @@ export async function getTopProjects() {
 
   if (error) {
     console.error("Erreur getTopProjects:", error);
-    return [];
+    throw new Error("Impossible de charger les projets les plus consultés.");
   }
 
   return projects || [];
@@ -112,7 +119,7 @@ export async function getTotalViewsCount(period?: string) {
 
   if (error) {
     console.error("Erreur getTotalViewsCount:", error);
-    return 0;
+    throw new Error("Impossible de charger le nombre de vues du site.");
   }
 
   return count || 0;
@@ -143,7 +150,7 @@ export async function getTrafficByCountry(period?: string) {
 
   if (error || !data) {
     console.error("Erreur récupération pays:", error);
-    return [];
+    throw new Error("Impossible de charger la répartition des visites par pays.");
   }
 
   // Agrégation JS par pays

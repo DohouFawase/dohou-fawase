@@ -3,6 +3,18 @@
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
+async function sendTrackingEvent(path: string, section: string) {
+  const response = await fetch("/api/track", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ path, section }),
+  });
+
+  if (!response.ok) {
+    console.error(`Erreur tracking (${response.status})`);
+  }
+}
+
 export function AnalyticsTracker() {
   const pathname = usePathname();
   const lastTrackedSection = useRef<string | null>(null);
@@ -11,14 +23,10 @@ export function AnalyticsTracker() {
   useEffect(() => {
     const trackPageView = async () => {
       try {
-        await fetch("/api/track", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            path: pathname,
-            section: pathname === "/" ? "hero" : pathname.replace("/", "")
-          }),
-        });
+        await sendTrackingEvent(
+          pathname,
+          pathname === "/" ? "hero" : pathname.replace("/", "")
+        );
       } catch (err) {
         console.error("Erreur tracking page:", err);
       }
@@ -29,6 +37,7 @@ export function AnalyticsTracker() {
 
   // 2. Tracking des sections au Scroll (uniquement sur les pages avec sections, comme la landing page)
   useEffect(() => {
+    lastTrackedSection.current = null;
     const sections = document.querySelectorAll("section[id]");
     if (sections.length === 0) return;
 
@@ -41,14 +50,9 @@ export function AnalyticsTracker() {
             if (lastTrackedSection.current !== sectionId) {
               lastTrackedSection.current = sectionId;
 
-              fetch("/api/track", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  path: pathname,
-                  section: sectionId,
-                }),
-              }).catch(() => {});
+              sendTrackingEvent(pathname, sectionId).catch((error) => {
+                console.error("Erreur tracking section:", error);
+              });
             }
           }
         });
