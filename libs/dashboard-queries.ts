@@ -84,6 +84,33 @@ export async function getUnreadMessagesCount() {
   return count || 0;
 }
 
+export async function getRecentMessages(period?: string) {
+  const supabase = await createClient();
+  const startDate = getStartDateISO(period);
+
+  let query = supabase
+    .from("messages")
+    .select("id, email, subject, message, is_read, created_at", { count: "exact" })
+    .order("created_at", { ascending: false })
+    .limit(5);
+
+  if (startDate) {
+    query = query.gte("created_at", startDate);
+  }
+
+  const { data, count, error } = await query;
+
+  if (error) {
+    console.error("Erreur getRecentMessages:", error);
+    throw new Error("Impossible de charger les demandes de contact.");
+  }
+
+  return {
+    total: count ?? 0,
+    messages: data ?? [],
+  };
+}
+
 // 4. Projets les plus vus (Top 5)
 export async function getTopProjects() {
   const supabase = await createClient();
@@ -123,6 +150,35 @@ export async function getTotalViewsCount(period?: string) {
   }
 
   return count || 0;
+}
+
+export async function getPreviousPeriodViewsCount(period?: string) {
+  const duration =
+    period === "24h"
+      ? 24 * 60 * 60 * 1000
+      : period === "7d"
+        ? 7 * 24 * 60 * 60 * 1000
+        : period === "30d"
+          ? 30 * 24 * 60 * 60 * 1000
+          : null;
+
+  if (!duration) return null;
+
+  const supabase = await createClient();
+  const end = new Date(Date.now() - duration).toISOString();
+  const start = new Date(Date.now() - duration * 2).toISOString();
+  const { count, error } = await supabase
+    .from("page_views")
+    .select("*", { count: "exact", head: true })
+    .gte("created_at", start)
+    .lt("created_at", end);
+
+  if (error) {
+    console.error("Erreur getPreviousPeriodViewsCount:", error);
+    throw new Error("Impossible de comparer les périodes de trafic.");
+  }
+
+  return count ?? 0;
 }
 
 // 6. Répartition du trafic PAR PAYS (Filtrable par période)
