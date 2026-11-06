@@ -4,29 +4,29 @@ const PRINCIPLES = [
   {
     n: "01",
     title: "Le ressenti est une fonctionnalité.",
-    desc: "La latence, le mouvement, la fluidité et le rythme font partie intégrante du produit. Si une interface semble désagréable ou mal calibrée, elle est ratée, peu importe ce que dit le cahier des charges.",
+    desc: "La latence, le mouvement, la fluidité et le rythme font partie du produit. Une interface qui manque de clarté ou de fluidité peut nuire à l’expérience, même si ses fonctionnalités sont présentes.",
   },
   {
     n: "02",
     title: "Livrer petit, livrer souvent.",
-    desc: "La meilleure version d'une fonctionnalité est celle qui est en production aujourd'hui et qui apprend des vrais utilisateurs. Je préfère un ajustement minutieux par semaine à une réécriture complète de dix pages.",
+    desc: "Je privilégie des livraisons par étapes, suivies de retours et d’améliorations ciblées. Cela permet de faire évoluer le produit sans attendre une refonte complète.",
   },
   {
     n: "03",
-    title: "Documenter par écrit.",
-    desc: "Le code est un moyen d'expression. La documentation, les messages de commit et les partages d'expérience le sont tout autant. Une rédaction claire apporte une valeur exponentielle et guide le prochain développeur (souvent, mon futur moi).",
+    title: "Partager les décisions.",
+    desc: "Une documentation utile, des commits explicites et des décisions partagées facilitent la reprise du projet et le travail en équipe.",
   },
   {
     n: "04",
     title: "Technos éprouvées, goût affûté.",
-    desc: "Je privilégie par défaut Laravel, Next.js, TypeScript et un ensemble restreint d'outils de confiance. Je réinvestis ensuite toute cette complexité technique économisée directement dans l'expérience du produit.",
+    desc: "Je privilégie des outils adaptés et éprouvés, comme Laravel, Next.js et TypeScript, en gardant la solution aussi simple que le projet le permet.",
   },
 ];
 
 export default function Principles() {
   return (
-    <section className="w-full bg-white text-black">
-      <div className="mx-auto container  px-6 pt-14 pb-24 sm:px-10 lg:px-16">
+    <section id="principles" className="w-full bg-white text-black">
+      <div data-reveal className="mx-auto container  px-6 pt-14 pb-24 sm:px-10 lg:px-16">
         {/* surtitre */}
         <div className="mb-10 inline-flex items-center gap-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-full border border-orange-600/40 text-[11px] font-bold text-orange-600">
@@ -44,10 +44,11 @@ export default function Principles() {
         </h2>
 
         {/* grille de principes */}
-        <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div data-reveal-stagger className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2">
           {PRINCIPLES.map((p) => (
             <div
               key={p.n}
+              data-reveal="card"
               className="rounded-2xl border border-black/10 bg-black/1.5 p-8"
             >
               <div className="flex items-center justify-between">

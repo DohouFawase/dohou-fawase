@@ -13,6 +13,20 @@ export interface Message {
   created_at: string;
 }
 
+export function getContactNameAndMessage(message: string) {
+  let visibleMessage = message;
+  const nameMatch = visibleMessage.match(/^\[contact-name\]\r?\n([^\r\n]{1,80})\r?\n\[\/contact-name\]\r?\n/);
+  if (nameMatch) visibleMessage = visibleMessage.slice(nameMatch[0].length);
+  const consentMatch = visibleMessage.match(/^\[auto-reply-consent\]\r?\ntrue\r?\n\[\/auto-reply-consent\]\r?\n/);
+  if (consentMatch) visibleMessage = visibleMessage.slice(consentMatch[0].length);
+
+  return {
+    name: nameMatch?.[1] ?? null,
+    receiptConsent: Boolean(consentMatch),
+    message: visibleMessage.replace(/^\r?\n/, ""),
+  };
+}
+
 interface MessageDetailModalProps {
   message: Message | null;
   isOpen: boolean;
@@ -26,6 +40,7 @@ export function MessageDetailModal({ message, isOpen, onClose }: MessageDetailMo
   const [replyBody, setReplyBody] = useState("");
 
   if (!isOpen || !message) return null;
+  const contact = getContactNameAndMessage(message.message);
 
   const formatDate = (dateString: string) => {
     return new Intl.DateTimeFormat("fr-FR", {
@@ -35,8 +50,9 @@ export function MessageDetailModal({ message, isOpen, onClose }: MessageDetailMo
   };
 
   const handleStartReply = () => {
+    const { message: originalMessage } = getContactNameAndMessage(message.message);
     setReplySubject(`Re: ${message.subject || "Votre message"}`);
-    setReplyBody(`\n\n--- Message d'origine ---\nDe : ${message.email}\n${message.message}`);
+    setReplyBody(`\n\n--- Message d'origine ---\nDe : ${message.email}\n${originalMessage}`);
     setIsReplying(true);
   };
 
@@ -49,7 +65,7 @@ export function MessageDetailModal({ message, isOpen, onClose }: MessageDetailMo
       alert("Votre réponse a été envoyée avec succès !");
       setIsReplying(false);
       onClose();
-    } catch (err) {
+    } catch {
       alert("Une erreur s'est produite lors de l'envoi de l'email.");
     } finally {
       setIsSending(false);
@@ -82,7 +98,9 @@ export function MessageDetailModal({ message, isOpen, onClose }: MessageDetailMo
               <h2 className="text-base font-bold text-black line-clamp-1">
                 {isReplying ? "Répondre au message" : message.subject || "Sans objet"}
               </h2>
-              <p className="text-xs text-gray-500 font-medium">{message.email}</p>
+              <p className="text-xs text-gray-500 font-medium">
+                {contact.name ? `${contact.name} · ` : ""}{message.email}
+              </p>
             </div>
           </div>
           <button
@@ -102,9 +120,14 @@ export function MessageDetailModal({ message, isOpen, onClose }: MessageDetailMo
                 <Calendar className="w-3.5 h-3.5" />
                 <span>Reçu le {formatDate(message.created_at)}</span>
               </div>
+              {contact.receiptConsent && (
+                <p className="rounded-lg bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-700">
+                  La personne a accepté de recevoir un e-mail de confirmation de son message.
+                </p>
+              )}
 
               <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 text-sm text-gray-800 leading-relaxed whitespace-pre-wrap">
-                {message.message}
+                {contact.message}
               </div>
             </>
           ) : (

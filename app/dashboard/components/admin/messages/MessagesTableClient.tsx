@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Message, MessageDetailModal } from "./MessageDetailModal";
+import { getContactNameAndMessage, Message, MessageDetailModal } from "./MessageDetailModal";
 import { Mail, MailOpen, Trash2, Eye, Calendar, Inbox } from "lucide-react";
 import { deleteMessageAction, toggleReadStatusAction } from "@/app/dashboard/messages/actions";
 
@@ -100,8 +100,11 @@ export function MessagesTableClient({ initialMessages }: MessagesTableClientProp
                     <td className="py-4 px-4">
                       <div>
                         <p className={`text-sm ${!msg.is_read ? "font-bold text-black" : "text-gray-700"}`}>
-                          {msg.email}
+                          {getContactNameAndMessage(msg.message).name || msg.email}
                         </p>
+                        {getContactNameAndMessage(msg.message).name && (
+                          <p className="mt-0.5 text-[11px] text-gray-400">{msg.email}</p>
+                        )}
                       </div>
                     </td>
 
@@ -112,7 +115,7 @@ export function MessagesTableClient({ initialMessages }: MessagesTableClientProp
                           {msg.subject || "Sans objet"}
                         </p>
                         <p className="text-gray-400 line-clamp-1 text-[11px] mt-0.5">
-                          {msg.message}
+                          {getContactNameAndMessage(msg.message).message}
                         </p>
                       </div>
                     </td>

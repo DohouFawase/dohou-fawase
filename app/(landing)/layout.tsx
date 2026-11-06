@@ -7,11 +7,13 @@ import CtaFooter from "@/components/footer";
 import Script from "next/script";
 import TerminalLoader from "@/components/terminalLoader";
 import { AnalyticsTracker } from "@/components/analytics-tracker";
+import { VisitorWelcome } from "@/components/visitor-welcome";
+import ScrollMotion from "@/components/scroll-motion";
 
 const SITE_URL = 'https://dohou.vercel.app';
 export const metadata: Metadata = {
   title: 'Développeur Full-Stack | Dohou Gbenoupko Fawase',
-  description: 'Je conçois des produits web et mobiles performants et scalables pour booster votre croissance.',
+  description: 'Ingénieur logiciel au croisement du produit, du design et du développement. Découvrez le parcours, les projets et les expertises de Dohou Gbenoupko Fawase.',
   metadataBase: new URL(SITE_URL),
   alternates: {
     canonical: '/',
@@ -20,18 +22,10 @@ export const metadata: Metadata = {
     icon: '/og-image.svg',
   },
   openGraph: {
-    title: 'Dohou Gbenoupko Fawase — AKA OMO IYA ONIRICE',
-    description: 'Ingénieur logiciel et créateur de produits pour startups.',
+    title: 'Dohou Gbenoupko Fawase — Produit, design et ingénierie',
+    description: 'Portfolio de Dohou Fawase : expériences, projets web et mobile, méthode de travail et contact.',
     url: SITE_URL,
-    siteName: 'Mon Portfolio',
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        type: 'image/png',
-      },
-    ],
+    siteName: 'Dohou Fawase — Portfolio',
     locale: 'fr_FR',
     type: 'website',
   },
@@ -65,9 +59,11 @@ export default function RootLayout({
         <AuthProvider>
           {/* Placé en haut pour bloquer l'écran dès le premier rendu */}
           <TerminalLoader />
+          <ScrollMotion />
           <AnalyticsTracker />
           <Navbar />
           {children}
+          <VisitorWelcome />
           <CtaFooter />
         </AuthProvider>
       </body>

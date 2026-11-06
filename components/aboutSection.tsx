@@ -5,31 +5,34 @@ import { createClient } from "@/utils/supabase/client";
 const SERVICES = [
   {
     n: "01",
-    title: "Design de Produit",
-    desc: "Des wireframes aux interfaces soignées et hautement convertissantes, conçues pour transformer vos visiteurs en clients payants.",
+    title: "Design produit",
+    desc: "Des premières maquettes aux interfaces finalisées, avec une attention particulière portée à la clarté, à l’accessibilité et aux objectifs du produit.",
   },
   {
     n: "02",
-    title: "Développement Web & Mobile",
-    desc: "Des front-ends rapides et accessibles combinés à des back-ends robustes en React, Next.js, Laravel, Nest.js et Mysql, taillés pour vendre et évoluer.",
+    title: "Développement web et mobile",
+    desc: "Des interfaces soignées et des back-ends maintenables avec React, Next.js, Laravel ou NestJS. Le choix technique dépend du besoin.",
   },
   {
     n: "03",
-    title: "Branding & Identité",
-    desc: "Des systèmes visuels qui rendent votre produit fiable et haut de gamme, pour que vos clients achètent en toute confiance.",
+    title: "Identité visuelle",
+    desc: "Des bases graphiques cohérentes pour aider un produit à se distinguer et à inspirer confiance.",
   },
   {
     n: "04",
-    title: "Architectures Évolutives",
-    desc: "Une infrastructure technique qui reste rapide et stable à mesure que votre trafic, vos revenus et vos équipes grandissent.",
+    title: "Architecture et performance",
+    desc: "Des systèmes structurés, testables et conçus pour évoluer sans complexité superflue.",
   },
 ];
 
 const FACTS = [
-  { label: "FOCUS", value: "Résolution de problèmes & croissance" },
-  { label: "PRODUITS LIVRÉS", value: "34+" },
+  { label: "FOCUS", value: "Conception et développement de produits" },
+  {
+    label: "SECTEURS",
+    value: "Immobilier · Fintech · SaaS · Agritech · Edtech · Proptech · Restauration…",
+  },
   { label: "EXPÉRIENCE", value: "4+ ans" },
-  { label: "DISPONIBLE POUR", value: "Freelance & Temps plein" },
+  { label: "DISPONIBLE POUR", value: "Missions freelance et postes à temps plein" },
 ];
 
 const CV_FILE_PATH = "/resumen/fawase_dohou.pdf";
@@ -61,7 +64,7 @@ export default function About() {
 
   return (
     <section className="w-full bg-white text-black" id="about">
-      <div className="mx-auto container px-6 pt-14 pb-24 sm:px-10 lg:px-16">
+      <div data-reveal="drift" className="mx-auto container px-6 pt-14 pb-24 sm:px-10 lg:px-16">
         {/* eyebrow */}
         <div className="mb-10 inline-flex items-center gap-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-full border border-orange-600/40 text-[11px] font-bold text-orange-600">
@@ -88,22 +91,19 @@ export default function About() {
               <p>
                 Je m&apos;appelle DOHOU GBENOUPKO FAWASE, connu en ligne sous le nom de{" "}
                 <span className="font-bold text-black">OMO IYA ONIRICE</span>. Je
-                résous des problèmes business grâce au code. Je me situe à
-                l&apos;intersection du produit, du design et de l&apos;ingénierie : le genre
-                de profil capable de maquetter un flux le matin et de déployer
-                l&apos;API le soir même.
+                travaille à la croisée du produit, du design et de l&apos;ingénierie
+                logicielle : de la compréhension du besoin à la conception et au
+                développement de la solution.
               </p>
               <p>
-                En plus de 4 ans, j&apos;ai conçu des marques et livré plus de 8 produits
-                web et mobiles pour des startups dans l&apos;immobilier, la fintech
-                et le SaaS. Je ne me contente pas de faire du joli ; je construis
-                des produits qui attirent les utilisateurs, les fidélisent et transforment
-                l&apos;attention en chiffre d&apos;affaires.
+                Mon parcours m&apos;a amené à contribuer à la conception d&apos;identités
+                visuelles et au développement de produits web et mobiles, notamment
+                dans l&apos;immobilier, la fintech et le SaaS.
               </p>
               <p>
-                Si vous cherchez quelqu&apos;un capable de piloter l&apos;ensemble du cycle
-                de vie d&apos;un produit, de l&apos;identité visuelle à l&apos;architecture technique,
-                tout en ayant les yeux rivés sur votre rentabilité, discutons-en.
+                Je peux intervenir sur une étape précise ou accompagner plusieurs
+                phases du produit, de la conception à la mise en production.
+                Parlons de votre besoin et du cadre de la mission.
               </p>
             </div>
 

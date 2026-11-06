@@ -1,23 +1,68 @@
 "use client";
 
 import useAuth from "@/hooks/useAuth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
+import { ArrowDownToLine, ArrowUpRight, Menu, X } from "lucide-react";
 
 const LINKS = [
-  { label: "À PROPOS", href: "#about" },
-  { label: "EXPÉRIENCE", href: "#work" },
-  { label: "COMPÉTENCES", href: "#stack" },
-  { label: "PROJETS", href: "#projects" },
-  { label: "CONTACT", href: "#contact" },
+  { label: "À propos", number: "01", href: "#about" },
+  { label: "Parcours", number: "02", href: "#work" },
+  { label: "Projets", number: "04", href: "#projects" },
+  { label: "Expertise", number: "05", href: "#stack" },
+  { label: "Contact", number: "07", href: "#contact" },
 ];
 
 const CV_FILE_PATH = "/resumen/fawase_dohou.pdf";
 const CV_DOWNLOAD_NAME = "CV_DOHOU_Fawase.pdf";
+const SECTION_IDS = [
+  "hero",
+  "about",
+  "work",
+  "method",
+  "projects",
+  "stack",
+  "principles",
+  "contact",
+];
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("hero");
   const { user, loading } = useAuth();
+
+  useEffect(() => {
+    const sections = SECTION_IDS.map((id) => document.getElementById(id)).filter(
+      (section): section is HTMLElement => section !== null,
+    );
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const current = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (current) {
+          const currentIndex = SECTION_IDS.indexOf(current.target.id);
+          const activeLink = [...LINKS]
+            .reverse()
+            .find((link) => SECTION_IDS.indexOf(link.href.slice(1)) <= currentIndex);
+          setActiveSection(activeLink?.href.slice(1) ?? "hero");
+        }
+      },
+      { rootMargin: "-25% 0px -60% 0px", threshold: [0, 0.1, 0.35] },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [open]);
 
   // Enregistrement dans Supabase + Déclenchement du téléchargement
   const handleDownloadCV = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -46,113 +91,127 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-black/10 bg-white/90 backdrop-blur">
-      <nav className="mx-auto container flex items-center justify-between px-6 py-4 sm:px-10 lg:px-16">
-        {/* Logo */}
-        <a href="#" className="flex items-center gap-2.5">
-          <span className="h-2 w-2 rounded-full bg-orange-600" />
-          <span className="text-[15px] font-bold text-black">
-            OMO iya oniRice
+    <header className="site-header sticky top-0 z-50">
+      <nav className="site-nav mx-auto flex max-w-[1440px] items-center justify-between gap-4 px-4 py-3 sm:px-7 lg:px-10">
+        <a
+          href="#hero"
+          className="brand-link group flex min-w-0 items-center gap-3"
+          aria-label="Retour à l’accueil"
+        >
+          <span className="brand-mark" aria-hidden="true">
+            <span>F</span>
+            <i />
+          </span>
+          <span className="min-w-0">
+            <span className="block truncate text-[13px] font-bold tracking-tight text-black sm:text-sm">
+              DOHOU FAWASE
+            </span>
+            <span className="mt-0.5 hidden text-[9px] font-semibold tracking-[0.16em] text-black/40 sm:block">
+              PRODUCT ENGINEER
+            </span>
           </span>
         </a>
 
-        {/* Nav links (Desktop) */}
-        <ul className="hidden items-center gap-8 md:flex">
-          {LINKS.map((link) => (
-            <li key={link.label}>
-              <a
-                href={link.href}
-                className="text-[11px] font-semibold tracking-widest text-black/50 transition hover:text-black"
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
+        <ul className="nav-capsule hidden items-center gap-1 p-1 lg:flex">
+          {LINKS.map((link) => {
+            const isActive = activeSection === link.href.slice(1);
+            return (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  aria-current={isActive ? "location" : undefined}
+                  className={`nav-capsule-link ${isActive ? "is-active" : ""}`}
+                >
+                  <span className="nav-capsule-number">{link.number}</span>
+                  {link.label}
+                </a>
+              </li>
+            );
+          })}
         </ul>
 
-        {/* CTA + Login (Desktop) */}
-        <div className="hidden items-center gap-4 md:flex">
+        <div className="hidden items-center gap-3 lg:flex">
           {!loading && (
             <a
               href={user ? "/dashboard" : "/auth"}
-              className="text-[11px] font-semibold tracking-widest text-black/60 transition hover:text-black"
+              className="nav-account-link"
             >
-              {user ? "MON COMPTE" : "CONNEXION"}
+              {user ? "MON ESPACE" : "CONNEXION"}
             </a>
           )}
-          <a
-            href={CV_FILE_PATH}
-            onClick={handleDownloadCV}
-            className="rounded-full bg-black px-5 py-2.5 text-[11px] font-bold tracking-widest text-white transition hover:bg-black/85"
-          >
-            ME RECRUTER →
+          <a href={CV_FILE_PATH} onClick={handleDownloadCV} className="cv-link">
+            CV <ArrowDownToLine size={13} />
+          </a>
+          <a href="#contact" className="nav-contact-link">
+            <span>Parlons projet</span>
+            <span className="nav-contact-icon">
+              <ArrowUpRight size={15} />
+            </span>
           </a>
         </div>
 
-        {/* Burger button (Mobile) */}
         <button
-          onClick={() => setOpen(!open)}
-          aria-label="Toggle menu"
+          type="button"
+          onClick={() => setOpen((isOpen) => !isOpen)}
+          aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
           aria-expanded={open}
-          className="flex flex-col items-center justify-center gap-1.5 md:hidden"
+          aria-controls="mobile-navigation"
+          className={`mobile-menu-toggle lg:hidden ${open ? "is-open" : ""}`}
         >
-          <span
-            className={`h-0.5 w-6 bg-black transition-transform duration-300 ${
-              open ? "translate-y-2 rotate-45" : ""
-            }`}
-          />
-          <span
-            className={`h-0.5 w-6 bg-black transition-opacity duration-300 ${
-              open ? "opacity-0" : "opacity-100"
-            }`}
-          />
-          <span
-            className={`h-0.5 w-6 bg-black transition-transform duration-300 ${
-              open ? "-translate-y-2 -rotate-45" : ""
-            }`}
-          />
+          <span>{open ? "FERMER" : "MENU"}</span>
+          <span className="mobile-menu-icon">
+            {open ? <X size={18} /> : <Menu size={18} />}
+          </span>
         </button>
       </nav>
 
-      {/* Mobile menu */}
       <div
-        className={`overflow-hidden transition-[max-height] duration-300 ease-in-out md:hidden ${
-          open ? "max-h-96" : "max-h-0"
-        }`}
+        id="mobile-navigation"
+        aria-hidden={!open}
+        inert={!open}
+        className={`mobile-nav-panel lg:hidden ${open ? "is-open" : ""}`}
       >
-        <ul className="flex flex-col gap-6 border-t border-black/10 bg-white px-6 py-6 sm:px-10">
-          {LINKS.map((link) => (
-            <li key={link.label}>
-              <a
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="text-[13px] font-semibold tracking-widest text-black/70 transition hover:text-black"
-              >
-                {link.label}
+        <div className="mobile-nav-inner">
+          <p className="mobile-nav-kicker">NAVIGATION · PORTFOLIO</p>
+          <ul className="mobile-nav-links">
+            {LINKS.map((link) => {
+              const isActive = activeSection === link.href.slice(1);
+              return (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    aria-current={isActive ? "location" : undefined}
+                    tabIndex={open ? 0 : -1}
+                    onClick={() => setOpen(false)}
+                  >
+                    <span className="mobile-nav-number">{link.number}</span>
+                    <span>{link.label}</span>
+                    <ArrowUpRight size={17} />
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+          <div className="mobile-nav-actions">
+            {!loading && (
+              <a href={user ? "/dashboard" : "/auth"} onClick={() => setOpen(false)}>
+                {user ? "MON ESPACE" : "CONNEXION"}
               </a>
-            </li>
-          ))}
-          {!loading && (
-            <li>
-              <a
-                href={user ? "/dashboard" : "/auth"}
-                onClick={() => setOpen(false)}
-                className="block text-[13px] font-semibold tracking-widest text-black/70 transition hover:text-black"
-              >
-                {user ? "MON COMPTE" : "CONNEXION"}
-              </a>
-            </li>
-          )}
-          <li>
-            <a
-              href={CV_FILE_PATH}
-              onClick={handleDownloadCV}
-              className="inline-block w-full text-center rounded-full bg-black px-5 py-3 text-[11px] font-bold tracking-widest text-white transition hover:bg-black/85"
-            >
-              ME RECRUTER →
+            )}
+            <a href={CV_FILE_PATH} onClick={handleDownloadCV}>
+              Télécharger le CV <ArrowDownToLine size={14} />
             </a>
-          </li>
-        </ul>
+          </div>
+          <a
+            href="#contact"
+            onClick={() => setOpen(false)}
+            className="mobile-nav-cta"
+            tabIndex={open ? 0 : -1}
+          >
+            Construisons quelque chose
+            <ArrowUpRight size={18} />
+          </a>
+        </div>
       </div>
     </header>
   );

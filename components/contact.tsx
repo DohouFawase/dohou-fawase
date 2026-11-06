@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight, Check, ArrowUpRight, Loader2 } from "lucide-react";
 import { createClient } from "@/utils/supabase/client"; // adapte le chemin à ton projet
 
 const SOCIALS = [
-  { label: "TWITTER", value: "@omo_iya_oniRice", href: "https://x.com/omo_iya_oniRice" },
+  { label: "X", value: "@omo_iya_oniRice", href: "https://x.com/omo_iya_oniRice" },
   { label: "GITHUB", value: "DohouFawase", href: "https://github.com/DohouFawase" },
-  { label: "LINKEDIN", value: "Fawase Gbenoupko DOHOU", href: "https://linkedin.com/in/dohou-fawase" },
-  { label: "WHATSAPP", value: "Écrivez-moi", href: "https://wa.me/+2290197395756" },
+  { label: "LINKEDIN", value: "Dohou Fawase", href: "https://linkedin.com/in/dohou-fawase" },
+  { label: "WHATSAPP", value: "Écrivez-moi", href: "https://wa.me/2290197395756" },
 ];
 
 const EMAIL = "dohoufawase@gmail.com";
@@ -18,7 +18,27 @@ export default function Contact() {
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [form, setForm] = useState({ email: "", subject: "", message: "" });
+  const [receiptConsent, setReceiptConsent] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+
+  useEffect(() => {
+    const handlePrefill = (event: Event) => {
+      const detail = (event as CustomEvent<{ subject: string; message: string }>).detail;
+      if (!detail) return;
+
+      setForm((current) => ({
+        ...current,
+        subject: detail.subject,
+        message: detail.message,
+      }));
+      document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+      window.setTimeout(() => document.getElementById("name")?.focus(), 400);
+    };
+
+    window.addEventListener("portfolio:contact-prefill", handlePrefill);
+    return () => window.removeEventListener("portfolio:contact-prefill", handlePrefill);
+  }, []);
 
   const handleCopy = async () => {
     try {
@@ -34,14 +54,21 @@ export default function Contact() {
     e.preventDefault();
     setSending(true);
     setError(null);
+    setSuccessMessage(null);
 
     const supabase = createClient();
+    const trimmedName = form.name.trim().slice(0, 80);
+    const savedMessage = [
+      trimmedName ? `[contact-name]\n${trimmedName}\n[/contact-name]\n` : "",
+      receiptConsent ? "[auto-reply-consent]\ntrue\n[/auto-reply-consent]\n" : "",
+      form.message,
+    ].join("");
 
     // 1. Sauvegarde des données dans Supabase
     const { error: insertError } = await supabase.from("messages").insert({
       email: form.email,
       subject: form.subject || null,
-      message: form.message,
+      message: savedMessage,
     });
 
     if (insertError) {
@@ -59,9 +86,11 @@ export default function Contact() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          name: trimmedName,
           email: form.email,
           subject: form.subject,
           message: form.message,
+          receiptConsent,
         }),
       });
 
@@ -69,8 +98,17 @@ export default function Contact() {
         throw new Error("L'envoi de l'e-mail a échoué.");
       }
 
+      const mailResult: { confirmationSent?: boolean } = await mailResponse.json();
       setSent(true);
-      setForm({ email: "", subject: "", message: "" });
+      setSuccessMessage(
+        receiptConsent && mailResult.confirmationSent
+          ? "Votre message a bien été reçu. Un e-mail de confirmation vient de vous être envoyé."
+          : receiptConsent
+            ? "Votre message a bien été reçu, mais l’e-mail de confirmation n’a pas pu être envoyé."
+            : "Votre message a bien été reçu, il sera traité dans les plus brefs délais."
+      );
+      setForm({ name: "", email: "", subject: "", message: "" });
+      setReceiptConsent(false);
     } catch (mailError) {
       console.error("Erreur d'envoi d'email via API:", mailError);
       // On rassure l'utilisateur car la donnée est déjà stockée en base de données !
@@ -85,7 +123,7 @@ export default function Contact() {
 
   return (
     <section className="w-full bg-white text-black" id="contact">
-      <div className="mx-auto container px-6 pt-14 pb-24 sm:px-10 lg:px-16">
+      <div data-reveal className="mx-auto container px-6 pt-14 pb-24 sm:px-10 lg:px-16">
 
         {/* Surtitre */}
         <div className="mb-6 inline-flex items-center gap-3">
@@ -99,7 +137,7 @@ export default function Contact() {
 
         {/* Titre principal */}
         <h2 className="max-w-4xl text-[2.4rem] font-extrabold leading-[1.1] tracking-tight text-black sm:text-5xl">
-          Un projet qui mérite d&apos;être créé ?{" "}
+          Prêt à faire avancer votre projet ?{" "}
           <span className="font-serif italic text-orange-600">
             Parlons-en.
           </span>
@@ -107,7 +145,7 @@ export default function Contact() {
 
         {/* Introduction */}
         <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-black/60">
-          Projets freelance, opportunités en CDI ou collaborations de produits. Je réponds généralement sous 24 heures.
+          Freelance, recrutement ou collaboration produit : partagez votre besoin et nous verrons ensemble comment avancer.
         </p>
 
         {/* Grille de contenu */}
@@ -134,7 +172,7 @@ export default function Contact() {
             </div>
 
             <div className="mt-10 text-[10px] font-semibold tracking-widest text-black/40">
-              AILLEURS
+              RÉSEAUX
             </div>
             <div className="mt-4 space-y-3">
               {SOCIALS.map((s) => (
@@ -158,6 +196,27 @@ export default function Contact() {
 
           {/* ---------------- DROITE : Formulaire ---------------- */}
           <form onSubmit={handleSubmit}>
+            <div className="mb-8">
+              <label
+                htmlFor="name"
+                className="text-[10px] font-semibold tracking-widest text-black/40"
+              >
+                VOTRE NOM (FACULTATIF)
+              </label>
+              <input
+                id="name"
+                type="text"
+                autoComplete="name"
+                maxLength={80}
+                placeholder="Comment pouvons-nous vous appeler ?"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                className="mt-3 w-full border-b border-black/15 bg-transparent pb-3 text-[15px] text-black placeholder:text-black/35 outline-none transition focus:border-orange-600"
+              />
+              <p className="mt-2 text-[11px] text-black/40">
+                Ce nom ne sera partagé que dans votre message de contact.
+              </p>
+            </div>
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
               <div>
                 <label
@@ -189,7 +248,7 @@ export default function Contact() {
                 <input
                   id="subject"
                   type="text"
-                  placeholder="Un poste, un projet, un bonjour"
+                  placeholder="Projet, recrutement, collaboration…"
                   value={form.subject}
                   onChange={(e) =>
                     setForm({ ...form, subject: e.target.value })
@@ -226,12 +285,25 @@ export default function Contact() {
               </div>
             </div>
 
+            <label className="mt-6 flex items-start gap-3 text-xs leading-5 text-black/60">
+              <input
+                type="checkbox"
+                checked={receiptConsent}
+                onChange={(event) => setReceiptConsent(event.target.checked)}
+                className="mt-1 h-4 w-4 shrink-0 accent-orange-600"
+              />
+              <span>
+                Je souhaite recevoir un e-mail automatique confirmant la réception de mon message.
+                Cette confirmation ne m’inscrit pas à une newsletter.
+              </span>
+            </label>
+
             {error && (
               <p className="mt-3 text-[13px] font-medium text-red-600">{error}</p>
             )}
             {sent && !error && (
               <p className="mt-3 text-[13px] font-medium text-green-600">
-                Votre message a bien été reçu, il sera traité dans les plus brefs délais.
+                {successMessage}
               </p>
             )}
 

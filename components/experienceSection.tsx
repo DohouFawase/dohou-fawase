@@ -30,30 +30,35 @@ function formatPeriod(start: string, end: string | null) {
 export default function Experience() {
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     const supabase = createClient();
 
     async function fetchExperiences() {
-      const { data, error } = await supabase
-        .from("experiences")
-        .select("*")
-        .order("order", { ascending: true });
+      try {
+        const { data, error } = await supabase
+          .from("experiences")
+          .select("*")
+          .order("order", { ascending: true });
 
-      if (error) {
-        console.error("Erreur chargement expériences:", error);
-      } else {
+        if (error) throw error;
         setExperiences(data ?? []);
+      } catch (error) {
+        console.error("Erreur chargement expériences:", error);
+        setLoadError(true);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
 
     fetchExperiences();
-  }, []);
+  }, [retryCount]);
 
   return (
     <section className="w-full bg-white text-black" id="work">
-      <div className="mx-auto container px-6 pt-14 pb-24 sm:px-10 lg:px-16">
+      <div data-reveal className="mx-auto container px-6 pt-14 pb-24 sm:px-10 lg:px-16">
         <div className="mb-10 inline-flex items-center gap-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-full border border-orange-600/40 text-[11px] font-bold text-orange-600">
             02
@@ -64,21 +69,47 @@ export default function Experience() {
         </div>
 
         <h2 className="max-w-5xl text-[2.4rem] font-extrabold leading-[1.1] tracking-tight text-black sm:text-5xl">
-          Quatre ans, cinq postes{" "}
+          Des expériences variées{" "}
           <span className="font-serif italic text-orange-600">
-            et toujours en apprentissage.
+            et une curiosité toujours active.
           </span>
         </h2>
 
-        <div className="mt-14 divide-y divide-black/10 border-y border-black/10">
+        <div data-reveal-stagger className="mt-14 divide-y divide-black/10 border-y border-black/10">
           {loading && (
             <p className="py-8 text-sm text-black/40">Chargement…</p>
           )}
 
-          {!loading &&
+          {!loading && loadError && (
+            <div className="py-8">
+              <p className="text-sm text-black/55">
+                Le parcours n’a pas pu être chargé. Réessayez dans un instant.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setLoadError(false);
+                  setLoading(true);
+                  setRetryCount((count) => count + 1);
+                }}
+                className="mt-4 rounded-full border border-black/15 px-5 py-2.5 text-xs font-semibold text-black transition hover:border-orange-600 hover:text-orange-700"
+              >
+                Réessayer
+              </button>
+            </div>
+          )}
+
+          {!loading && !loadError && experiences.length === 0 && (
+            <p className="py-8 text-sm text-black/55">
+              Aucune expérience n’est publiée dans cette section pour le moment.
+            </p>
+          )}
+
+          {!loading && !loadError &&
             experiences.map((exp, i) => (
               <div
                 key={exp.id}
+                data-reveal
                 className="grid grid-cols-1 items-start gap-4 py-8 sm:grid-cols-[60px_1fr_auto] sm:items-center sm:gap-8"
               >
                 <div className="text-[12px] font-bold text-orange-600">
@@ -94,9 +125,11 @@ export default function Experience() {
                       {exp.company}
                     </p>
                   </div>
-                  <p className="max-w-xl text-[15px] leading-relaxed text-black/60">
-                    {exp.description}
-                  </p>
+                  {exp.description && (
+                    <p className="max-w-xl text-[15px] leading-relaxed text-black/60">
+                      {exp.description}
+                    </p>
+                  )}
                 </div>
 
                 <div className="text-left sm:text-right">

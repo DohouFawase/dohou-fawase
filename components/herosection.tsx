@@ -7,12 +7,14 @@ export default function Hero() {
       className="w-full bg-white px-4 py-5 text-black sm:px-6 sm:py-7 lg:px-8 lg:py-9"
     >
       <div className="relative mx-auto flex min-h-[680px] w-full max-w-[1320px] flex-col justify-between overflow-hidden rounded-[1.5rem] border border-orange-600/25 bg-white px-6 py-7 shadow-[0_20px_80px_rgba(0,0,0,0.035)] sm:min-h-[720px] sm:rounded-[2rem] sm:px-10 sm:py-9 lg:min-h-[min(780px,calc(100svh-8rem))] lg:px-12 lg:py-10">
+        <div aria-hidden="true" className="hero-orbit hero-orbit--outer" />
+        <div aria-hidden="true" className="hero-orbit hero-orbit--inner" />
         <div
           aria-hidden="true"
           className="pointer-events-none absolute left-1/2 top-1/2 -z-0 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-600/10 blur-[100px] sm:h-96 sm:w-96"
         />
 
-        <header className="relative z-10 flex items-center justify-between gap-4">
+        <header className="hero-enter hero-enter--top relative z-10 flex items-center justify-between gap-4">
           <a
             href="#"
             className="text-xs font-bold tracking-[0.08em] text-black sm:text-sm"
@@ -24,37 +26,45 @@ export default function Hero() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-40" />
               <span className="relative h-2 w-2 rounded-full bg-emerald-500" />
             </span>
-            DISPONIBLE POUR VOS PROJETS
+            PRODUIT · DESIGN · DÉVELOPPEMENT
           </div>
         </header>
 
         <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center py-14 text-center sm:py-16">
-          <p className="mb-5 inline-flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] text-orange-600 sm:text-xs">
+          <p className="hero-enter hero-enter--kicker mb-5 inline-flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] text-orange-600 sm:text-xs">
             <Sparkles className="h-4 w-4" aria-hidden="true" />
-            INGÉNIERIE LOGICIELLE · CRÉATION DE PRODUITS
+            DU BESOIN À LA MISE EN PRODUCTION
           </p>
           <h1 className="text-[clamp(3.2rem,9vw,7.5rem)] font-medium leading-[0.92] tracking-[-0.06em] text-black">
-            <span className="block">Des produits</span>
-            <span className="mt-2 block font-light text-orange-600 sm:mt-3">
-              qui font grandir.
+            <span className="hero-title-line block">Des produits</span>
+            <span className="hero-title-line hero-title-line--accent mt-2 block font-light text-orange-600 sm:mt-3">
+              pensés pour évoluer.
             </span>
           </h1>
         </div>
 
-        <div className="relative z-10 flex flex-col gap-7 border-t border-black/10 pt-5 sm:flex-row sm:items-end sm:justify-between sm:gap-10 sm:pt-6">
+        <div className="hero-enter hero-enter--bottom relative z-10 flex flex-col gap-7 border-t border-black/10 pt-5 sm:flex-row sm:items-end sm:justify-between sm:gap-10 sm:pt-6">
           <div className="max-w-md">
             <p className="text-xs leading-relaxed text-black/65 sm:text-sm">
-              Je transforme vos idées et problèmes complexes en produits web
-              et mobiles évolutifs, pensés pour vos utilisateurs et votre
-              croissance.
+              Je conçois et développe des expériences web et mobiles utiles,
+              claires et adaptées aux besoins de leurs utilisateurs.
             </p>
-            <a
-              href="#about"
-              className="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-black transition-colors hover:text-orange-600"
-            >
-              En savoir plus
-              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-            </a>
+            <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3">
+              <a
+                href="#contact"
+                className="hero-cta inline-flex items-center gap-2 rounded-full bg-orange-600 px-5 py-3 text-xs font-semibold text-white hover:bg-orange-700"
+              >
+                Parlons de votre projet
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </a>
+              <a
+                href="#about"
+                className="inline-flex items-center gap-2 text-xs font-semibold text-black transition-colors hover:text-orange-600"
+              >
+                En savoir plus
+                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+              </a>
+            </div>
           </div>
 
           <a
