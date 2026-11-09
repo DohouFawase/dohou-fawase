@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Plus, ExternalLink, Eye, Trash2, Edit2, Star } from "lucide-react";
-import { Project, ProjectModal , } from "./CreateProjectModal";
+import { Project, ProjectModal } from "./CreateProjectModal";
 import { deleteProjectAction } from "@/app/dashboard/projects/actions";
             
 interface ProjectsTableClientProps {
@@ -41,108 +41,109 @@ export function ProjectsTableClient({ initialProjects }: ProjectsTableClientProp
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-7">
       {/* Header avec Bouton Ajouter */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-black tracking-tight">Projets</h1>
-          <p className="text-xs text-gray-500 mt-1">Gère et modifie les projets de ton portfolio.</p>
+          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-orange-700">Gestion du portfolio</p>
+          <h1 className="text-3xl font-semibold tracking-tight text-[#171717]">Projets</h1>
+          <p className="mt-2 text-sm text-neutral-500">Gère et modifie les projets de ton portfolio.</p>
         </div>
         <button
           onClick={handleOpenCreate}
-          className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-xl text-sm font-bold hover:bg-orange-600 transition-all shadow-sm"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#171717] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
         >
-          <Plus className="w-4 h-4" />
-          <span>Nouveau Projet</span>
+          <Plus className="h-4 w-4" />
+          <span>Nouveau projet</span>
         </button>
       </div>
 
       {/* Tableau CRUD */}
-      <div className="bg-white border border-black/10 rounded-2xl shadow-sm overflow-hidden">
+      <section aria-label="Liste des projets" className="overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-sm">
         {initialProjects && initialProjects.length > 0 ? (
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs">
+            <table className="w-full min-w-[760px] border-collapse text-left text-sm">
               <thead>
                 <tr className="bg-gray-50/80 border-b border-gray-100 text-gray-400 font-bold uppercase tracking-wider">
-                  <th className="py-3.5 px-4">Projet</th>
-                  <th className="py-3.5 px-4">Stack</th>
-                  <th className="py-3.5 px-4 text-center">Vues</th>
-                  <th className="py-3.5 px-4 text-center">Featured</th>
-                  <th className="py-3.5 px-4 text-right">Actions</th>
+                  <th scope="col" className="px-5 py-4 text-[10px]">Projet</th>
+                  <th scope="col" className="px-5 py-4 text-[10px]">Technologies</th>
+                  <th scope="col" className="px-5 py-4 text-center text-[10px]">Vues</th>
+                  <th scope="col" className="px-5 py-4 text-center text-[10px]">Mise en avant</th>
+                  <th scope="col" className="px-5 py-4 text-right text-[10px]">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-100/80">
                 {initialProjects.map((project) => (
-                  <tr key={project.id} className="hover:bg-gray-50/50 transition-colors">
+                  <tr key={project.id} className="transition-colors hover:bg-orange-50/30">
                     {/* Infos projet */}
-                    <td className="py-4 px-4">
-                      <div className="flex items-center gap-3">
+                    <td className="px-5 py-4">
+                      <div className="flex items-center gap-3.5">
                         {project.image_url ? (
                           <img
                             src={project.image_url}
                             alt={project.title}
-                            className="w-10 h-10 object-cover rounded-lg border border-gray-200 shrink-0"
+                            className="h-12 w-12 shrink-0 rounded-xl border border-black/[0.06] object-cover"
                           />
                         ) : (
-                          <div className="w-10 h-10 bg-gray-100 rounded-lg border border-gray-200 flex items-center justify-center shrink-0 text-gray-400 font-bold">
+                          <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl border border-orange-100 bg-orange-50 font-bold text-orange-700">
                             {project.title.substring(0, 2).toUpperCase()}
                           </div>
                         )}
-                        <div>
-                          <p className="font-bold text-black text-sm">{project.title}</p>
-                          <p className="text-gray-400 line-clamp-1 max-w-xs">{project.description || "Aucune description"}</p>
+                        <div className="min-w-0">
+                          <p className="font-semibold text-[#171717]">{project.title}</p>
+                          <p className="mt-1 line-clamp-1 max-w-xs text-xs text-neutral-500">{project.description || "Aucune description"}</p>
                         </div>
                       </div>
                     </td>
 
                     {/* Stack */}
-                    <td className="py-4 px-4">
-                      <div className="flex flex-wrap gap-1 max-w-xs">
+                    <td className="px-5 py-4">
+                      <div className="flex max-w-xs flex-wrap gap-1.5">
                         {project.stack && project.stack.length > 0 ? (
                           project.stack.map((tech: string, i: number) => (
                             <span
                               key={i}
-                              className="px-2 py-0.5 bg-gray-100 text-gray-700 font-semibold rounded-md text-[10px]"
+                              className="rounded-lg border border-black/[0.05] bg-stone-50 px-2.5 py-1 text-[11px] font-medium text-neutral-600"
                             >
                               {tech}
                             </span>
                           ))
                         ) : (
-                          <span className="text-gray-400 italic">Aucune</span>
+                          <span className="text-xs text-neutral-400">Aucune</span>
                         )}
                       </div>
                     </td>
 
                     {/* Vues */}
-                    <td className="py-4 px-4 text-center font-bold text-black">
-                      <div className="inline-flex items-center gap-1 bg-gray-100 px-2.5 py-1 rounded-md">
-                        <Eye className="w-3.5 h-3.5 text-gray-500" />
+                    <td className="px-5 py-4 text-center font-semibold text-[#171717]">
+                      <div className="inline-flex items-center gap-1.5 rounded-lg bg-stone-50 px-2.5 py-1.5">
+                        <Eye className="h-3.5 w-3.5 text-neutral-400" />
                         <span>{project.views || 0}</span>
                       </div>
                     </td>
 
                     {/* Featured */}
-                    <td className="py-4 px-4 text-center">
+                    <td className="px-5 py-4 text-center">
                       {project.featured ? (
-                        <span className="inline-flex items-center gap-1 text-orange-600 bg-orange-50 px-2 py-1 rounded-md font-bold">
-                          <Star className="w-3 h-3 fill-orange-500" />
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-orange-100 bg-orange-50 px-2.5 py-1 text-xs font-semibold text-orange-700">
+                          <Star className="h-3 w-3 fill-orange-500" />
                           <span>Oui</span>
                         </span>
                       ) : (
-                        <span className="text-gray-400">Non</span>
+                        <span className="text-xs text-neutral-400">Non</span>
                       )}
                     </td>
 
                     {/* Actions CRUD */}
-                    <td className="py-4 px-4 text-right">
-                      <div className="flex items-center justify-end gap-1">
+                    <td className="px-5 py-4 text-right">
+                      <div className="flex items-center justify-end gap-1.5">
                         {/* Liens externes */}
                         {project.project_url && (
                           <a
                             href={project.project_url}
                             target="_blank"
                             rel="noreferrer"
-                            className="p-1.5 text-gray-400 hover:text-black hover:bg-gray-100 rounded-lg transition-colors"
+                            className="rounded-lg p-2 text-neutral-400 transition hover:bg-stone-100 hover:text-[#171717] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
                             title="Démo"
                           >
                             <ExternalLink className="w-4 h-4" />
@@ -154,7 +155,7 @@ export function ProjectsTableClient({ initialProjects }: ProjectsTableClientProp
                             href={project.github_url}
                             target="_blank"
                             rel="noreferrer"
-                            className="p-1.5 text-gray-400 hover:text-black hover:bg-gray-100 rounded-lg transition-colors"
+                            className="rounded-lg p-2 text-neutral-400 transition hover:bg-stone-100 hover:text-[#171717] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
                             title="GitHub"
                           >
                             <GithubIcon className="w-4 h-4" />
@@ -164,7 +165,7 @@ export function ProjectsTableClient({ initialProjects }: ProjectsTableClientProp
                         {/* Éditer (Update) */}
                         <button
                           onClick={() => handleOpenEdit(project)}
-                          className="p-1.5 text-gray-600 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
+                          className="rounded-lg p-2 text-neutral-500 transition hover:bg-orange-50 hover:text-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
                           title="Modifier"
                         >
                           <Edit2 className="w-4 h-4" />
@@ -173,7 +174,7 @@ export function ProjectsTableClient({ initialProjects }: ProjectsTableClientProp
                         {/* Supprimer (Delete) */}
                         <button
                           onClick={() => handleDelete(project.id, project.title)}
-                          className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          className="rounded-lg p-2 text-neutral-400 transition hover:bg-red-50 hover:text-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
                           title="Supprimer"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -186,11 +187,13 @@ export function ProjectsTableClient({ initialProjects }: ProjectsTableClientProp
             </table>
           </div>
         ) : (
-          <div className="p-12 text-center space-y-3">
-            <p className="text-gray-400 text-sm italic">Aucun projet enregistré.</p>
+          <div className="space-y-3 px-6 py-16 text-center">
+            <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-orange-50 text-orange-600"><Plus className="h-5 w-5" /></div>
+            <p className="text-sm font-medium text-neutral-600">Aucun projet enregistré.</p>
+            <p className="text-xs text-neutral-400">Ajoute un projet pour le faire apparaître dans ton portfolio.</p>
           </div>
         )}
-      </div>
+      </section>
 
       {/* Modal Réutilisable */}
       <ProjectModal

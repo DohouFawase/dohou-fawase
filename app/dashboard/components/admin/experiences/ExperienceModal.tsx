@@ -61,166 +61,171 @@ export function ExperienceModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div className="bg-white border border-black/10 rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-4 backdrop-blur-sm animate-in fade-in duration-200">
+      <div role="dialog" aria-modal="true" aria-labelledby="experience-modal-title" className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-[1.5rem] border border-black/[0.06] bg-white shadow-2xl">
         
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <div className="flex items-center gap-2">
-            <div className="p-2 bg-orange-50 text-orange-600 rounded-lg">
+        <div className="flex items-center justify-between border-b border-black/[0.06] bg-stone-50/70 px-6 py-5 sm:px-7">
+          <div className="flex items-center gap-3">
+            <div className="rounded-xl border border-orange-100 bg-orange-50 p-2.5 text-orange-700">
               {isEditing ? <Edit2 className="w-5 h-5" /> : <Briefcase className="w-5 h-5" />}
             </div>
-            <h2 className="text-lg font-bold text-black">
-              {isEditing ? "Modifier l'expérience" : "Ajouter une expérience"}
-            </h2>
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-orange-700">Portfolio</p>
+              <h2 id="experience-modal-title" className="mt-0.5 text-lg font-semibold tracking-tight text-[#171717]">
+                {isEditing ? "Modifier l'expérience" : "Ajouter une expérience"}
+              </h2>
+            </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-gray-400 hover:text-black rounded-lg hover:bg-gray-100 transition-colors"
+            aria-label="Fermer"
+            className="rounded-xl p-2 text-neutral-400 transition hover:bg-white hover:text-[#171717] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Formulaire */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto flex-1">
+        <form onSubmit={handleSubmit} className="flex-1 space-y-5 overflow-y-auto p-6 sm:p-7">
           {/* Entreprise & Poste */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <label className="text-xs font-bold text-gray-700">Entreprise *</label>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-neutral-700">Entreprise <span className="text-orange-600">*</span></label>
               <input
                 type="text"
                 name="company"
                 required
                 defaultValue={experienceToEdit?.company || ""}
                 placeholder="ex: Google, Freelance"
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black"
+                className="w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
               />
             </div>
-            <div className="space-y-1">
-              <label className="text-xs font-bold text-gray-700">Poste / Rôle *</label>
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-neutral-700">Poste / rôle <span className="text-orange-600">*</span></label>
               <input
                 type="text"
                 name="role"
                 required
                 defaultValue={experienceToEdit?.role || ""}
                 placeholder="ex: Full-Stack Developer"
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black"
+                className="w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
               />
             </div>
           </div>
 
           {/* Type de contrat & Localisation */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <label className="text-xs font-bold text-gray-700">Type de contrat</label>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-neutral-700">Type de contrat</label>
               <input
                 type="text"
                 name="contract_type"
                 defaultValue={experienceToEdit?.contract_type || ""}
                 placeholder="ex: CDI, Freelance, Temps partiel"
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black"
+                className="w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
               />
             </div>
-            <div className="space-y-1">
-              <label className="text-xs font-bold text-gray-700">Lieu</label>
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-neutral-700">Lieu</label>
               <input
                 type="text"
                 name="location"
                 defaultValue={experienceToEdit?.location || ""}
                 placeholder="ex: Cotonou, Bénin (Remote)"
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black"
+                className="w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
               />
             </div>
           </div>
 
           {/* Dates */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <label className="text-xs font-bold text-gray-700">Date de début *</label>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-neutral-700">Date de début <span className="text-orange-600">*</span></label>
               <input
                 type="date"
                 name="start_date"
                 required
                 defaultValue={experienceToEdit?.start_date || ""}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black"
+                className="w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
               />
             </div>
-            <div className="space-y-1">
-              <label className="text-xs font-bold text-gray-700">Date de fin</label>
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-neutral-700">Date de fin</label>
               <input
                 type="date"
                 name="end_date"
                 disabled={isCurrentRole}
                 defaultValue={experienceToEdit?.end_date || ""}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black disabled:bg-gray-100 disabled:text-gray-400"
+                className="w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition focus:border-orange-400 focus:ring-4 focus:ring-orange-100 disabled:cursor-not-allowed disabled:bg-stone-100 disabled:text-neutral-400"
               />
             </div>
           </div>
 
           {/* Checkbox Poste actuel */}
-          <div className="flex items-center gap-2 pt-1">
+          <div className="flex items-start gap-3 rounded-xl border border-orange-100 bg-orange-50/60 p-4">
             <input
               type="checkbox"
               id="is_current"
               checked={isCurrentRole}
               onChange={(e) => setIsCurrentRole(e.target.checked)}
-              className="w-4 h-4 rounded text-orange-600 focus:ring-orange-500 border-gray-300"
+              className="mt-0.5 h-4 w-4 rounded border-neutral-300 text-orange-600 focus:ring-orange-500"
             />
-            <label htmlFor="is_current" className="text-xs font-semibold text-gray-700">
-              Poste actuel (En cours)
+            <label htmlFor="is_current" className="text-sm font-medium text-neutral-700">
+              Poste actuel
+              <span className="mt-0.5 block text-xs font-normal text-neutral-500">Aucune date de fin ne sera enregistrée.</span>
             </label>
           </div>
 
           {/* Description */}
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-700">Description / Missions</label>
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-neutral-700">Description / missions</label>
             <textarea
               name="description"
               rows={3}
               defaultValue={experienceToEdit?.description || ""}
               placeholder="Détails des tâches et réalisations..."
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black"
+              className="w-full resize-y rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
             />
           </div>
 
           {/* Logo URL & Ordre */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="sm:col-span-2 space-y-1">
-              <label className="text-xs font-bold text-gray-700">URL du Logo</label>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div className="space-y-2 sm:col-span-2">
+              <label className="text-xs font-semibold text-neutral-700">URL du logo</label>
               <input
                 type="url"
                 name="logo_url"
                 defaultValue={experienceToEdit?.logo_url || ""}
                 placeholder="https://..."
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black"
+                className="w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
               />
             </div>
-            <div className="space-y-1">
-              <label className="text-xs font-bold text-gray-700">Ordre</label>
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-neutral-700">Ordre</label>
               <input
                 type="number"
                 name="order"
                 defaultValue={experienceToEdit?.order || 0}
                 placeholder="0"
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black"
+                className="w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
               />
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+          <div className="sticky bottom-0 -mx-6 -mb-6 flex flex-col-reverse gap-2 border-t border-black/[0.06] bg-white/95 p-5 backdrop-blur sm:-mx-7 sm:-mb-7 sm:flex-row sm:justify-end sm:gap-3 sm:px-7">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border border-gray-200 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50"
+              className="rounded-xl border border-neutral-200 px-4 py-2.5 text-sm font-medium text-neutral-600 transition hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
             >
               Annuler
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex items-center gap-2 px-5 py-2 bg-black text-white rounded-xl text-xs font-bold hover:bg-orange-600 disabled:opacity-50 transition-colors"
+              className="flex items-center justify-center gap-2 rounded-xl bg-[#171717] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
             >
               {isSubmitting ? (
                 <>

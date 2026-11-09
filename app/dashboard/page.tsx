@@ -177,7 +177,7 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
   const isAudienceView = currentTab === "traffic";
 
   return (
-    <main className="min-h-screen bg-[#f7f5f0] px-4 py-6 text-[#171717] sm:px-6 lg:px-10 lg:py-9">
+    <main className="min-h-screen bg-[#f7f5f0] px-4 py-6 text-[#171717] sm:px-6 lg:px-8 lg:py-9">
       <div className="mx-auto max-w-7xl space-y-7">
         <header className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
           <div>

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Plus, X, FolderPlus, Edit2, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { X, FolderPlus, Edit2, Loader2 } from "lucide-react";
 import { createProjectAction, updateProjectAction } from "@/app/dashboard/projects/actions";
 
 export interface Project {
@@ -48,129 +48,134 @@ export function ProjectModal({ projectToEdit, isOpen, onClose }: ProjectModalPro
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div className="bg-white border border-black/10 rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-4 backdrop-blur-sm animate-in fade-in duration-200">
+      <div role="dialog" aria-modal="true" aria-labelledby="project-modal-title" className="flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-[1.5rem] border border-black/[0.06] bg-white shadow-2xl">
         
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <div className="flex items-center gap-2">
-            <div className="p-2 bg-orange-50 text-orange-600 rounded-lg">
+        <div className="flex items-center justify-between border-b border-black/[0.06] bg-stone-50/70 px-6 py-5 sm:px-7">
+          <div className="flex items-center gap-3">
+            <div className="rounded-xl border border-orange-100 bg-orange-50 p-2.5 text-orange-700">
               {isEditing ? <Edit2 className="w-5 h-5" /> : <FolderPlus className="w-5 h-5" />}
             </div>
-            <h2 className="text-lg font-bold text-black">
-              {isEditing ? "Modifier le projet" : "Ajouter un projet"}
-            </h2>
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-orange-700">Portfolio</p>
+              <h2 id="project-modal-title" className="mt-0.5 text-lg font-semibold tracking-tight text-[#171717]">
+                {isEditing ? "Modifier le projet" : "Ajouter un projet"}
+              </h2>
+            </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-gray-400 hover:text-black rounded-lg hover:bg-gray-100 transition-colors"
+            aria-label="Fermer"
+            className="rounded-xl p-2 text-neutral-400 transition hover:bg-white hover:text-[#171717] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Formulaire */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto flex-1 text-black">
+        <form onSubmit={handleSubmit} className="flex-1 space-y-5 overflow-y-auto p-6 text-[#171717] sm:p-7">
           {/* Titre */}
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-700">Titre du projet *</label>
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-neutral-700">Titre du projet <span className="text-orange-600">*</span></label>
             <input
               type="text"
               name="title"
               required
               defaultValue={projectToEdit?.title || ""}
               placeholder="ex: KuraScouting"
-              className="w-full px-3 py-2 border tex border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black"
+              className="w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
             />
           </div>
 
           {/* Description */}
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-700">Description</label>
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-neutral-700">Description</label>
             <textarea
               name="description"
               rows={3}
               defaultValue={projectToEdit?.description || ""}
               placeholder="Brève description du projet..."
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black"
+              className="w-full resize-y rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
             />
           </div>
 
           {/* Stack Technologique */}
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-700">Technologies (séparées par des virgules)</label>
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-neutral-700">Technologies <span className="font-normal text-neutral-400">(séparées par des virgules)</span></label>
             <input
               type="text"
               name="stack"
               defaultValue={projectToEdit?.stack ? projectToEdit.stack.join(", ") : ""}
               placeholder="React, Next.js, Laravel, Tailwind CSS"
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black"
+              className="w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
             />
           </div>
 
           {/* URLs */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <label className="text-xs font-bold text-gray-700">URL de l&apos;image</label>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-neutral-700">URL de l&apos;image</label>
               <input
                 type="url"
                 name="image_url"
                 defaultValue={projectToEdit?.image_url || ""}
                 placeholder="https://..."
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black"
+                className="w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
               />
             </div>
-            <div className="space-y-1">
-              <label className="text-xs font-bold text-gray-700">Lien Démo (Live URL)</label>
+            <div className="space-y-2">
+              <label className="text-xs font-semibold text-neutral-700">Lien de démonstration</label>
               <input
                 type="url"
                 name="project_url"
                 defaultValue={projectToEdit?.project_url || ""}
                 placeholder="https://..."
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black"
+                className="w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
               />
             </div>
           </div>
 
           {/* GitHub URL */}
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-700">Lien GitHub</label>
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-neutral-700">Lien GitHub</label>
             <input
               type="url"
               name="github_url"
               defaultValue={projectToEdit?.github_url || ""}
               placeholder="https://github.com/..."
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black"
+              className="w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
             />
           </div>
 
           {/* Featured Switch */}
-          <div className="flex items-center gap-2 pt-2">
+          <div className="flex items-start gap-3 rounded-xl border border-orange-100 bg-orange-50/60 p-4">
             <input
               type="checkbox"
               id="featured"
               name="featured"
               defaultChecked={projectToEdit?.featured || false}
-              className="w-4 h-4 rounded text-orange-600 focus:ring-orange-500 border-gray-300"
+              className="mt-0.5 h-4 w-4 rounded border-neutral-300 text-orange-600 focus:ring-orange-500"
             />
-            <label htmlFor="featured" className="text-xs font-semibold text-gray-700">
-              Mettre en avant sur la page d&lsquo;accueil (Featured)
+            <label htmlFor="featured" className="text-sm font-medium text-neutral-700">
+              Mettre en avant sur la page d’accueil
+              <span className="mt-0.5 block text-xs font-normal text-neutral-500">Le projet sera mis en évidence dans ton portfolio.</span>
             </label>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+          <div className="sticky bottom-0 -mx-6 -mb-6 flex flex-col-reverse gap-2 border-t border-black/[0.06] bg-white/95 p-5 backdrop-blur sm:-mx-7 sm:-mb-7 sm:flex-row sm:justify-end sm:gap-3 sm:px-7">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border border-gray-200 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50"
+              className="rounded-xl border border-neutral-200 px-4 py-2.5 text-sm font-medium text-neutral-600 transition hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
             >
               Annuler
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex items-center gap-2 px-5 py-2 bg-black text-white rounded-xl text-xs font-bold hover:bg-orange-600 disabled:opacity-50 transition-colors"
+              className="flex items-center justify-center gap-2 rounded-xl bg-[#171717] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
             >
               {isSubmitting ? (
                 <>

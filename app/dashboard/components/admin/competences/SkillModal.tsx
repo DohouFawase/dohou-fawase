@@ -43,46 +43,50 @@ export function SkillModal({ skillToEdit, isOpen, onClose }: SkillModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-      <div className="bg-white border border-black/10 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 p-4 backdrop-blur-sm animate-in fade-in duration-200">
+      <div role="dialog" aria-modal="true" aria-labelledby="skill-modal-title" className="flex max-h-[90vh] w-full max-w-xl flex-col overflow-hidden rounded-[1.5rem] border border-black/[0.06] bg-white shadow-2xl">
         
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <div className="flex items-center gap-2">
-            <div className="p-2 bg-orange-50 text-orange-600 rounded-lg">
+        <div className="flex items-center justify-between border-b border-black/[0.06] bg-stone-50/70 px-6 py-5 sm:px-7">
+          <div className="flex items-center gap-3">
+            <div className="rounded-xl border border-orange-100 bg-orange-50 p-2.5 text-orange-700">
               {isEditing ? <Edit2 className="w-5 h-5" /> : <Wrench className="w-5 h-5" />}
             </div>
-            <h2 className="text-lg font-bold text-black">
-              {isEditing ? "Modifier la catégorie" : "Ajouter une catégorie de compétences"}
-            </h2>
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-orange-700">Portfolio</p>
+              <h2 id="skill-modal-title" className="mt-0.5 text-lg font-semibold tracking-tight text-[#171717]">
+                {isEditing ? "Modifier la catégorie" : "Ajouter une catégorie"}
+              </h2>
+            </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-gray-400 hover:text-black rounded-lg hover:bg-gray-100 transition-colors"
+            aria-label="Fermer"
+            className="rounded-xl p-2 text-neutral-400 transition hover:bg-white hover:text-[#171717] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Formulaire */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="flex-1 space-y-5 overflow-y-auto p-6 sm:p-7">
           {/* Nom de la catégorie */}
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-700">Catégorie *</label>
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-neutral-700">Catégorie <span className="text-orange-600">*</span></label>
             <input
               type="text"
               name="category"
               required
               defaultValue={skillToEdit?.category || ""}
               placeholder="ex: Frontend, Backend, Tools & DevOps"
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black"
+              className="w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
             />
           </div>
 
           {/* Liste des compétences */}
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-700">
-              Compétences / Technologies (séparées par des virgules) *
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-neutral-700">
+              Compétences / technologies <span className="font-normal text-neutral-400">(séparées par des virgules)</span> <span className="text-orange-600">*</span>
             </label>
             <textarea
               name="items"
@@ -90,35 +94,35 @@ export function SkillModal({ skillToEdit, isOpen, onClose }: SkillModalProps) {
               rows={4}
               defaultValue={skillToEdit?.items ? skillToEdit.items.join(", ") : ""}
               placeholder="React, Next.js, Tailwind CSS, TypeScript"
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black"
+              className="w-full resize-y rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
             />
           </div>
 
           {/* Ordre d'affichage */}
-          <div className="space-y-1">
-            <label className="text-xs font-bold text-gray-700">Ordre d&apos;affichage</label>
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-neutral-700">Ordre d&apos;affichage</label>
             <input
               type="number"
               name="order"
               defaultValue={skillToEdit?.order || 0}
               placeholder="0"
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-black"
+              className="w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
             />
           </div>
 
           {/* Action Buttons */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+          <div className="sticky bottom-0 -mx-6 -mb-6 flex flex-col-reverse gap-2 border-t border-black/[0.06] bg-white/95 p-5 backdrop-blur sm:-mx-7 sm:-mb-7 sm:flex-row sm:justify-end sm:gap-3 sm:px-7">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 border border-gray-200 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50"
+              className="rounded-xl border border-neutral-200 px-4 py-2.5 text-sm font-medium text-neutral-600 transition hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
             >
               Annuler
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex items-center gap-2 px-5 py-2 bg-black text-white rounded-xl text-xs font-bold hover:bg-orange-600 disabled:opacity-50 transition-colors"
+              className="flex items-center justify-center gap-2 rounded-xl bg-[#171717] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
             >
               {isSubmitting ? (
                 <>

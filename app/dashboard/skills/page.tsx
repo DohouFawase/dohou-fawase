@@ -12,16 +12,10 @@ export default async function AdminSkillsPage() {
         .order("order", { ascending: true });
 
     return (
-        <>
-
-            <div className="p-8  space-y-8 bg-amber-50 min-h-screen">
-
-                <SkillsTableClient initialSkills={skills || []} />;
-
+        <main className="min-h-screen bg-[#f7f5f0] px-4 py-6 sm:px-6 lg:px-8 lg:py-9">
+            <div className="mx-auto max-w-7xl">
+                <SkillsTableClient initialSkills={skills || []} />
             </div>
-
-        </>
-    )
-
-
+        </main>
+    );
 }
