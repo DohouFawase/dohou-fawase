@@ -8,7 +8,9 @@ export interface Experience {
   id: string;
   company: string;
   role: string;
+  role_en?: string | null;
   description?: string;
+  description_en?: string | null;
   location?: string;
   start_date: string;
   end_date?: string | null;
@@ -77,6 +79,7 @@ export function ExperienceModal({
               </h2>
             </div>
           </div>
+
           <button
             onClick={onClose}
             aria-label="Fermer"
@@ -112,6 +115,11 @@ export function ExperienceModal({
                 className="w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
               />
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-neutral-700">Poste en anglais</label>
+            <input type="text" name="role_en" defaultValue={experienceToEdit?.role_en || ""} placeholder="e.g. Full-Stack Developer" className="w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100" />
           </div>
 
           {/* Type de contrat & Localisation */}
@@ -187,6 +195,11 @@ export function ExperienceModal({
               placeholder="Détails des tâches et réalisations..."
               className="w-full resize-y rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
             />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-neutral-700">Description / duties (English)</label>
+            <textarea name="description_en" rows={3} defaultValue={experienceToEdit?.description_en || ""} placeholder="English translation of the role description..." className="w-full resize-y rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100" />
           </div>
 
           {/* Logo URL & Ordre */}

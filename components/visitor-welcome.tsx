@@ -10,6 +10,7 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
+import { useLanguage } from "@/context/LanguageProvider";
 
 type Choice = {
   label: string;
@@ -83,12 +84,25 @@ const projectStages = [
 type AssistantStep = "home" | "project" | "stage" | "summary" | "answer";
 
 export function VisitorWelcome() {
+  const { language } = useLanguage();
+  const en = language === "en";
+  const activeProjectChoices: Choice[] = en ? [
+    { label: "Website or web/mobile app", response: "I can support you from design through deployment of a web or mobile product.", actionLabel: "Share my project", subject: "Web or app project", message: "Hello Fawase,\n\nI’d like to discuss a website or app project.\n\nWhat I need: " },
+    { label: "Product design or improvement", response: "I also work on product design and user journeys to make interfaces clearer and more effective.", actionLabel: "Discuss my product", subject: "Product design or improvement", message: "Hello Fawase,\n\nI’d like to discuss product design or improvements.\n\nWhat I need: " },
+    { label: "Architecture or technical support", response: "Let’s talk about your architecture, performance, or technical support needs.", actionLabel: "Describe my needs", subject: "Technical support", message: "Hello Fawase,\n\nI’d like to discuss a technical or architecture need.\n\nWhat I need: " },
+  ] : projectChoices;
+  const activeInformationChoices: Choice[] = en ? [
+    { label: "What are his areas of expertise?", response: "Product design, web and mobile development, brand identity, and scalable architecture. The goal is to build useful, accessible products ready to grow.", actionLabel: "Explore expertise", href: "/#about" },
+    { label: "What experience does he have?", response: "Fawase has over four years of experience building web and mobile products, including in real estate, fintech, and SaaS.", actionLabel: "View experience", href: "/#work" },
+    { label: "How does a project work?", response: "The process has three steps: understand the problem, design and build the solution, then launch and improve it based on results.", actionLabel: "View the approach", href: "/#method" },
+  ] : informationChoices;
+  const activeProjectStages = en ? ["I’m still shaping the idea", "I want to launch the project", "I want to improve an existing product"] : projectStages;
   const [available, setAvailable] = useState(false);
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<AssistantStep>("home");
   const [answer, setAnswer] = useState<Choice | null>(null);
   const [selectedProject, setSelectedProject] = useState<Choice | null>(null);
-  const [selectedStage, setSelectedStage] = useState<(typeof projectStages)[number] | null>(null);
+  const [selectedStage, setSelectedStage] = useState<string | null>(null);
 
   useEffect(() => {
     const timer = window.setTimeout(() => setAvailable(true), 2800);
@@ -152,7 +166,7 @@ export function VisitorWelcome() {
         <section
           role="dialog"
           aria-modal="false"
-          aria-label="Assistant du portfolio"
+          aria-label={en ? "Portfolio assistant" : "Assistant du portfolio"}
           className="w-[min(23rem,calc(100vw-2.5rem))] overflow-hidden rounded-2xl border border-black/10 bg-white text-black shadow-2xl shadow-black/15"
         >
           <header className="flex items-center justify-between bg-[#171717] px-4 py-3.5 text-white">
@@ -161,16 +175,16 @@ export function VisitorWelcome() {
                 <Sparkles className="h-4 w-4" />
               </span>
               <div>
-                <p className="text-sm font-semibold">Assistant portfolio</p>
+                <p className="text-sm font-semibold">{en ? "Portfolio assistant" : "Assistant portfolio"}</p>
                 <p className="mt-0.5 text-[10px] text-white/55">
-                  Orientation rapide · réponses guidées
+                  {en ? "Quick guidance · suggested answers" : "Orientation rapide · réponses guidées"}
                 </p>
               </div>
             </div>
             <button
               type="button"
               onClick={() => setOpen(false)}
-              aria-label="Fermer l’assistant"
+              aria-label={en ? "Close assistant" : "Fermer l’assistant"}
               className="rounded-full p-1.5 text-white/60 transition hover:bg-white/10 hover:text-white"
             >
               <X className="h-4 w-4" />
@@ -180,13 +194,13 @@ export function VisitorWelcome() {
           <div className="space-y-4 p-4">
             <p className="rounded-2xl rounded-tl-sm bg-neutral-100 px-3.5 py-3 text-xs leading-5 text-neutral-700">
               {step === "home"
-                ? "Bonjour ! Que souhaitez-vous faire ?"
+                ? (en ? "Hello! What would you like to do?" : "Bonjour ! Que souhaitez-vous faire ?")
                 : step === "project"
-                  ? "En 30 secondes, dessinons les contours de votre projet. Quel est votre besoin ?"
+                  ? (en ? "Let’s outline your project in 30 seconds. What do you need?" : "En 30 secondes, dessinons les contours de votre projet. Quel est votre besoin ?")
                   : step === "stage"
-                    ? "Où en êtes-vous aujourd’hui ?"
+                    ? (en ? "Where are you with it today?" : "Où en êtes-vous aujourd’hui ?")
                     : step === "summary"
-                      ? "Votre brief est prêt. Vous pourrez le compléter et le modifier avant de l’envoyer."
+                      ? (en ? "Your brief is ready. You can complete and edit it before sending." : "Votre brief est prêt. Vous pourrez le compléter et le modifier avant de l’envoyer.")
                       : answer?.response}
             </p>
 
@@ -199,7 +213,7 @@ export function VisitorWelcome() {
                 >
                   <span className="flex items-center gap-2">
                     <ClipboardList className="h-4 w-4 text-orange-600" />
-                    Créer mon brief express
+                    {en ? "Create a quick brief" : "Créer mon brief express"}
                   </span>
                   <ArrowRight className="h-3.5 w-3.5 text-orange-600" />
                 </button>
@@ -207,15 +221,15 @@ export function VisitorWelcome() {
                   type="button"
                   onClick={() =>
                     startContact(
-                      "Opportunité de recrutement",
-                      "Bonjour Fawase,\n\nJe vous contacte au sujet d’une opportunité de recrutement.\n\nLe poste et l’équipe : ",
+                      en ? "Hiring opportunity" : "Opportunité de recrutement",
+                      en ? "Hello Fawase,\n\nI’m reaching out about a hiring opportunity.\n\nRole and team: " : "Bonjour Fawase,\n\nJe vous contacte au sujet d’une opportunité de recrutement.\n\nLe poste et l’équipe : ",
                     )
                   }
                   className="flex w-full items-center justify-between rounded-xl border border-black/10 px-3.5 py-3 text-left text-xs font-medium transition hover:border-orange-300 hover:bg-orange-50"
                 >
-                  Je recrute <ArrowRight className="h-3.5 w-3.5 text-orange-600" />
+                  {en ? "I’m hiring" : "Je recrute"} <ArrowRight className="h-3.5 w-3.5 text-orange-600" />
                 </button>
-                {informationChoices.map((choice) => (
+                {activeInformationChoices.map((choice) => (
                   <button
                     type="button"
                     key={choice.label}
@@ -231,7 +245,7 @@ export function VisitorWelcome() {
                   onClick={() => setOpen(false)}
                   className="flex w-full items-center justify-between rounded-xl border border-black/10 px-3.5 py-3 text-xs font-medium transition hover:border-orange-300 hover:bg-orange-50"
                 >
-                  Voir les réalisations <ArrowRight className="h-3.5 w-3.5 text-orange-600" />
+                  {en ? "View selected work" : "Voir les réalisations"} <ArrowRight className="h-3.5 w-3.5 text-orange-600" />
                 </Link>
               </div>
             )}
@@ -247,7 +261,7 @@ export function VisitorWelcome() {
                   ))}
                   <span className="ml-1 text-[10px] text-neutral-400">1/3</span>
                 </div>
-                {projectChoices.map((choice) => (
+                {activeProjectChoices.map((choice) => (
                   <button
                     type="button"
                     key={choice.subject}
@@ -266,7 +280,7 @@ export function VisitorWelcome() {
                   onClick={reset}
                   className="inline-flex items-center gap-1.5 px-1 py-2 text-[11px] font-medium text-neutral-500 hover:text-black"
                 >
-                  <ArrowLeft className="h-3 w-3" /> Retour
+                  <ArrowLeft className="h-3 w-3" /> {en ? "Back" : "Retour"}
                 </button>
               </div>
             )}
@@ -282,7 +296,7 @@ export function VisitorWelcome() {
                   ))}
                   <span className="ml-1 text-[10px] text-neutral-400">2/3</span>
                 </div>
-                {projectStages.map((stage) => (
+                {activeProjectStages.map((stage) => (
                   <button
                     type="button"
                     key={stage}
@@ -301,7 +315,7 @@ export function VisitorWelcome() {
                   onClick={() => setStep("project")}
                   className="inline-flex items-center gap-1.5 px-1 py-2 text-[11px] font-medium text-neutral-500 hover:text-black"
                 >
-                  <ArrowLeft className="h-3 w-3" /> Retour
+                  <ArrowLeft className="h-3 w-3" /> {en ? "Back" : "Retour"}
                 </button>
               </div>
             )}
@@ -316,7 +330,7 @@ export function VisitorWelcome() {
                 </div>
                 <div className="rounded-xl border border-orange-100 bg-orange-50/70 p-3.5">
                   <p className="text-[10px] font-semibold uppercase tracking-wider text-orange-700">
-                    Votre point de départ
+                    {en ? "Your starting point" : "Votre point de départ"}
                   </p>
                   <p className="mt-2 text-xs font-semibold text-neutral-800">{selectedProject.label}</p>
                   <p className="mt-1 text-[11px] text-neutral-500">{selectedStage}</p>
@@ -326,14 +340,14 @@ export function VisitorWelcome() {
                   onClick={prepareProjectContact}
                   className="flex w-full items-center justify-center gap-2 rounded-xl bg-orange-600 px-4 py-3 text-xs font-semibold text-white transition hover:bg-orange-700"
                 >
-                  Continuer vers mon brief <ArrowRight className="h-3.5 w-3.5" />
+                  {en ? "Continue to my brief" : "Continuer vers mon brief"} <ArrowRight className="h-3.5 w-3.5" />
                 </button>
                 <button
                   type="button"
                   onClick={() => setStep("stage")}
                   className="inline-flex items-center gap-1.5 px-1 py-1 text-[11px] font-medium text-neutral-500 hover:text-black"
                 >
-                  <ArrowLeft className="h-3 w-3" /> Modifier ma réponse
+                  <ArrowLeft className="h-3 w-3" /> {en ? "Change my answer" : "Modifier ma réponse"}
                 </button>
               </div>
             )}
@@ -352,13 +366,13 @@ export function VisitorWelcome() {
                   onClick={reset}
                   className="inline-flex items-center gap-1.5 px-1 py-2 text-[11px] font-medium text-neutral-500 hover:text-black"
                 >
-                  <ArrowLeft className="h-3 w-3" /> Choisir un autre besoin
+                  <ArrowLeft className="h-3 w-3" /> {en ? "Choose another need" : "Choisir un autre besoin"}
                 </button>
               </div>
             )}
           </div>
           <p className="border-t border-neutral-100 px-4 py-2.5 text-[10px] text-neutral-400">
-            Vos choix ne sont pas enregistrés. Rien n’est envoyé avant votre validation du formulaire.
+            {en ? "Your choices aren’t saved. Nothing is sent until you submit the form." : "Vos choix ne sont pas enregistrés. Rien n’est envoyé avant votre validation du formulaire."}
           </p>
         </section>
       )}
@@ -366,11 +380,11 @@ export function VisitorWelcome() {
       <button
         type="button"
         onClick={() => setOpen((current) => !current)}
-        aria-label={open ? "Fermer l’assistant" : "Ouvrir l’assistant portfolio"}
+        aria-label={open ? (en ? "Close assistant" : "Fermer l’assistant") : (en ? "Open portfolio assistant" : "Ouvrir l’assistant portfolio")}
         className="group inline-flex items-center gap-2 rounded-full bg-[#171717] px-4 py-3 text-xs font-semibold text-white shadow-lg shadow-black/20 transition hover:bg-orange-700"
       >
         {open ? <X className="h-4 w-4" /> : <MessageCircle className="h-4 w-4" />}
-        <span>{open ? "Fermer" : "Parlons de votre projet"}</span>
+        <span>{open ? (en ? "Close" : "Fermer") : (en ? "Let’s discuss your project" : "Parlons de votre projet")}</span>
       </button>
     </aside>
   );

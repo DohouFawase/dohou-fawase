@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client"; // adapte le chemin à ton projet
+import { useLanguage } from "@/context/LanguageProvider";
 
 type Skill = {
   id: string;
@@ -11,6 +12,8 @@ type Skill = {
 };
 
 export default function Stack() {
+  const { language } = useLanguage();
+  const en = language === "en";
   const [skills, setSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
@@ -48,22 +51,21 @@ export default function Stack() {
             05
           </span>
           <span className="text-[11px] font-semibold tracking-widest text-black/40">
-            COMPÉTENCES
+            {en ? "SKILLS" : "COMPÉTENCES"}
           </span>
         </div>
 
         {/* titre principal */}
         <h2 className="max-w-3xl text-[2.4rem] font-extrabold leading-[1.1] tracking-tight text-black sm:text-5xl">
-          Les compétences mobilisées{" "}
+          {en ? "Skills applied " : "Les compétences mobilisées "}{" "}
           <span className="font-serif italic text-orange-600">
-            selon les besoins du produit.
+            {en ? "to meet product needs." : "selon les besoins du produit."}
           </span>
         </h2>
 
         {/* introduction */}
         <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-black/60">
-          Cette sélection reflète les outils et pratiques que j’utilise. Le choix
-          des technologies dépend du contexte, des contraintes et des objectifs du projet.
+          {en ? "This selection reflects the tools and practices I use. Technology choices depend on the project context, constraints, and goals." : "Cette sélection reflète les outils et pratiques que j’utilise. Le choix des technologies dépend du contexte, des contraintes et des objectifs du projet."}
         </p>
 
         {/* --- ÉTAT : chargement --- */}
@@ -82,11 +84,10 @@ export default function Stack() {
         {!loading && !loadError && skills.length === 0 && (
           <div className="mt-14 flex flex-col items-center justify-center rounded-2xl border border-dashed border-black/15 bg-black/1.5 px-6 py-20 text-center">
             <h3 className="text-lg font-bold text-black">
-              Aucune compétence n’est publiée dans cette section pour le moment
+              {en ? "No skills have been published here yet." : "Aucune compétence n’est publiée dans cette section pour le moment"}
             </h3>
             <p className="mt-2 max-w-sm text-[14px] leading-relaxed text-black/50">
-              Vous pouvez me contacter pour échanger sur les technologies et
-              pratiques adaptées à votre projet.
+              {en ? "Contact me to discuss the technologies and practices that fit your project." : "Vous pouvez me contacter pour échanger sur les technologies et pratiques adaptées à votre projet."}
             </p>
           </div>
         )}
@@ -94,10 +95,10 @@ export default function Stack() {
         {!loading && loadError && (
           <div className="mt-14 rounded-2xl border border-orange-900/10 bg-orange-50/60 px-6 py-10 text-center">
             <h3 className="text-lg font-bold text-black">
-              Les compétences ne sont pas disponibles pour le moment
+              {en ? "Skills are currently unavailable" : "Les compétences ne sont pas disponibles pour le moment"}
             </h3>
             <p className="mt-2 text-sm text-black/55">
-              Un problème a empêché leur chargement. Réessayez dans un instant.
+              {en ? "We couldn’t load them. Please try again shortly." : "Un problème a empêché leur chargement. Réessayez dans un instant."}
             </p>
             <button
               type="button"
@@ -108,7 +109,7 @@ export default function Stack() {
               }}
               className="mt-5 rounded-full border border-black/15 px-5 py-2.5 text-xs font-semibold text-black transition hover:border-orange-600 hover:text-orange-700"
             >
-              Réessayer
+              {en ? "Try again" : "Réessayer"}
             </button>
           </div>
         )}
