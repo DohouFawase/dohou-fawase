@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ArrowRight, Check, ArrowUpRight, Loader2 } from "lucide-react";
 import { createClient } from "@/utils/supabase/client"; // adapte le chemin à ton projet
+import { useLanguage } from "@/context/LanguageProvider";
 
 const SOCIALS = [
   { label: "X", value: "@omo_iya_oniRice", href: "https://x.com/omo_iya_oniRice" },
@@ -14,6 +15,8 @@ const SOCIALS = [
 const EMAIL = "dohoufawase@gmail.com";
 
 export default function Contact() {
+  const { language } = useLanguage();
+  const en = language === "en";
   const [copied, setCopied] = useState(false);
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
@@ -73,7 +76,7 @@ export default function Contact() {
 
     if (insertError) {
       console.error("Erreur envoi message Supabase:", insertError);
-      setError("Une erreur est survenue lors de l'enregistrement de votre message.");
+      setError(en ? "An error occurred while saving your message." : "Une erreur est survenue lors de l'enregistrement de votre message.");
       setSending(false);
       return;
     }
@@ -95,17 +98,17 @@ export default function Contact() {
       });
 
       if (!mailResponse.ok) {
-        throw new Error("L'envoi de l'e-mail a échoué.");
+        throw new Error(en ? "Email delivery failed." : "L'envoi de l'e-mail a échoué.");
       }
 
       const mailResult: { confirmationSent?: boolean } = await mailResponse.json();
       setSent(true);
       setSuccessMessage(
         receiptConsent && mailResult.confirmationSent
-          ? "Votre message a bien été reçu. Un e-mail de confirmation vient de vous être envoyé."
+          ? (en ? "Your message was received. A confirmation email has been sent." : "Votre message a bien été reçu. Un e-mail de confirmation vient de vous être envoyé.")
           : receiptConsent
-            ? "Votre message a bien été reçu, mais l’e-mail de confirmation n’a pas pu être envoyé."
-            : "Votre message a bien été reçu, il sera traité dans les plus brefs délais."
+            ? (en ? "Your message was received, but we couldn’t send the confirmation email." : "Votre message a bien été reçu, mais l’e-mail de confirmation n’a pas pu être envoyé.")
+            : (en ? "Your message was received and will be handled as soon as possible." : "Votre message a bien été reçu, il sera traité dans les plus brefs délais.")
       );
       setForm({ name: "", email: "", subject: "", message: "" });
       setReceiptConsent(false);
@@ -113,7 +116,7 @@ export default function Contact() {
       console.error("Erreur d'envoi d'email via API:", mailError);
       // On rassure l'utilisateur car la donnée est déjà stockée en base de données !
       setError(
-        "Votre message a bien été enregistré en base de données, mais un problème technique a empêché l'envoi de la notification mail. Soyez serein, j'y ai quand même accès !"
+        en ? "Your message was saved, but a technical issue prevented the email notification. I can still access your message." : "Votre message a bien été enregistré en base de données, mais un problème technique a empêché l'envoi de la notification mail. Soyez serein, j'y ai quand même accès !"
       );
       setSent(true); // On valide quand même visuellement l'envoi
     } finally {
@@ -131,21 +134,21 @@ export default function Contact() {
             07
           </span>
           <span className="text-[11px] font-semibold tracking-widest text-black/40">
-            CONTACT
+            {en ? "CONTACT" : "CONTACT"}
           </span>
         </div>
 
         {/* Titre principal */}
         <h2 className="max-w-4xl text-[2.4rem] font-extrabold leading-[1.1] tracking-tight text-black sm:text-5xl">
-          Prêt à faire avancer votre projet ?{" "}
+          {en ? "Ready to move your project forward? " : "Prêt à faire avancer votre projet ? "}{" "}
           <span className="font-serif italic text-orange-600">
-            Parlons-en.
+            {en ? "Let’s talk." : "Parlons-en."}
           </span>
         </h2>
 
         {/* Introduction */}
         <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-black/60">
-          Freelance, recrutement ou collaboration produit : partagez votre besoin et nous verrons ensemble comment avancer.
+          {en ? "Freelance work, hiring, or product collaboration: tell me what you need and we’ll find a way forward." : "Freelance, recrutement ou collaboration produit : partagez votre besoin et nous verrons ensemble comment avancer."}
         </p>
 
         {/* Grille de contenu */}
@@ -167,12 +170,12 @@ export default function Contact() {
                 onClick={handleCopy}
                 className="text-[11px] font-bold tracking-widest text-orange-600 transition hover:text-orange-500"
               >
-                {copied ? "COPIÉ !" : "COPIER"}
+              {copied ? (en ? "COPIED!" : "COPIÉ !") : (en ? "COPY" : "COPIER")}
               </button>
             </div>
 
             <div className="mt-10 text-[10px] font-semibold tracking-widest text-black/40">
-              RÉSEAUX
+              {en ? "SOCIAL" : "RÉSEAUX"}
             </div>
             <div className="mt-4 space-y-3">
               {SOCIALS.map((s) => (
@@ -201,20 +204,20 @@ export default function Contact() {
                 htmlFor="name"
                 className="text-[10px] font-semibold tracking-widest text-black/40"
               >
-                VOTRE NOM (FACULTATIF)
+                {en ? "YOUR NAME (OPTIONAL)" : "VOTRE NOM (FACULTATIF)"}
               </label>
               <input
                 id="name"
                 type="text"
                 autoComplete="name"
                 maxLength={80}
-                placeholder="Comment pouvons-nous vous appeler ?"
+                placeholder={en ? "What should we call you?" : "Comment pouvons-nous vous appeler ?"}
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 className="mt-3 w-full border-b border-black/15 bg-transparent pb-3 text-[15px] text-black placeholder:text-black/35 outline-none transition focus:border-orange-600"
               />
               <p className="mt-2 text-[11px] text-black/40">
-                Ce nom ne sera partagé que dans votre message de contact.
+                {en ? "This name will only appear in your contact message." : "Ce nom ne sera partagé que dans votre message de contact."}
               </p>
             </div>
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
@@ -223,7 +226,7 @@ export default function Contact() {
                   htmlFor="email"
                   className="text-[10px] font-semibold tracking-widest text-black/40"
                 >
-                  VOTRE EMAIL
+                  {en ? "YOUR EMAIL" : "VOTRE EMAIL"}
                 </label>
                 <input
                   id="email"
@@ -243,12 +246,12 @@ export default function Contact() {
                   htmlFor="subject"
                   className="text-[10px] font-semibold tracking-widest text-black/40"
                 >
-                  SUJET
+                  {en ? "SUBJECT" : "SUJET"}
                 </label>
                 <input
                   id="subject"
                   type="text"
-                  placeholder="Projet, recrutement, collaboration…"
+                  placeholder={en ? "Project, hiring, collaboration…" : "Projet, recrutement, collaboration…"}
                   value={form.subject}
                   onChange={(e) =>
                     setForm({ ...form, subject: e.target.value })
@@ -263,14 +266,14 @@ export default function Contact() {
                 htmlFor="message"
                 className="text-[10px] font-semibold tracking-widest text-black/40"
               >
-                MESSAGE
+                {en ? "MESSAGE" : "MESSAGE"}
               </label>
               <div className="relative">
                 <textarea
                   id="message"
                   required
                   rows={3}
-                  placeholder="Dites-m'en un peu plus sur ce que vous préparez."
+                  placeholder={en ? "Tell me a little more about what you’re planning." : "Dites-m'en un peu plus sur ce que vous préparez."}
                   value={form.message}
                   onChange={(e) =>
                     setForm({ ...form, message: e.target.value })
@@ -293,8 +296,7 @@ export default function Contact() {
                 className="mt-1 h-4 w-4 shrink-0 accent-orange-600"
               />
               <span>
-                Je souhaite recevoir un e-mail automatique confirmant la réception de mon message.
-                Cette confirmation ne m’inscrit pas à une newsletter.
+                {en ? "I’d like an automatic email confirming that my message was received. This does not subscribe me to a newsletter." : "Je souhaite recevoir un e-mail automatique confirmant la réception de mon message. Cette confirmation ne m’inscrit pas à une newsletter."}
               </span>
             </label>
 
@@ -315,12 +317,12 @@ export default function Contact() {
               {sending ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  ENVOI...
+                  {en ? "SENDING..." : "ENVOI..."}
                 </>
               ) : sent ? (
-                "MESSAGE ENVOYÉ"
+                en ? "MESSAGE SENT" : "MESSAGE ENVOYÉ"
               ) : (
-                "ENVOYER LE MESSAGE"
+                en ? "SEND MESSAGE" : "ENVOYER LE MESSAGE"
               )}
               <ArrowRight className="h-4 w-4" strokeWidth={2.5} />
             </button>

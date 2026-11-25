@@ -3,11 +3,14 @@
 import { useEffect, useState } from "react";
 import { ArrowRight, ArrowUpRight, Sparkles } from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
+import { useLanguage } from "@/context/LanguageProvider";
 
 type Project = {
   id: string;
   title: string;
+  title_en?: string | null;
   description: string | null;
+  description_en?: string | null;
   image_url: string | null;
   stack: string[] | string | null;
   project_url: string | null;
@@ -32,7 +35,8 @@ function BrowserChrome({ url }: { url: string }) {
   );
 }
 
-function ProjectPreview({ project }: { project: Project }) {
+function ProjectPreview({ project, en }: { project: Project; en: boolean }) {
+  const projectTitle = en ? (project.title_en?.trim() || project.title) : project.title;
   if (project.image_url) {
     return (
       <div className="flex h-full flex-col">
@@ -58,7 +62,7 @@ function ProjectPreview({ project }: { project: Project }) {
           Produit numérique · Sélection
         </p>
         <p className="mt-4 font-serif text-2xl leading-tight tracking-tight text-white sm:text-3xl">
-          {project.title}
+          {projectTitle}
         </p>
         <p className="mt-4 text-[9px] font-medium uppercase tracking-[0.17em] text-white/40">
           Aperçu du projet
@@ -72,6 +76,8 @@ function ProjectPreview({ project }: { project: Project }) {
 }
 
 export default function Work() {
+  const { language } = useLanguage();
+  const en = language === "en";
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
@@ -159,22 +165,21 @@ export default function Work() {
             04
           </span>
           <span className="text-[11px] font-semibold tracking-widest text-black/40">
-            PROJETS SÉLECTIONNÉS
+            {en ? "SELECTED PROJECTS" : "PROJETS SÉLECTIONNÉS"}
           </span>
         </div>
 
         {/* titre principal */}
         <h2 className="max-w-3xl text-[2.4rem] font-extrabold leading-[1.1] tracking-tight text-black sm:text-5xl">
-          Quelques réalisations à découvrir.{" "}
+          {en ? "A few projects to explore. " : "Quelques réalisations à découvrir. "}{" "}
           <span className="font-serif italic text-orange-600">
-            Certaines missions restent confidentielles.
+            {en ? "Some work remains confidential." : "Certaines missions restent confidentielles."}
           </span>
         </h2>
 
         {/* introduction */}
         <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-black/60">
-          Découvrez une sélection de produits et d’outils auxquels j’ai
-          contribué. Les liens sont indiqués lorsqu’ils sont disponibles.
+          {en ? "Explore a selection of products and tools I’ve contributed to. Links are included when available." : "Découvrez une sélection de produits et d’outils auxquels j’ai contribué. Les liens sont indiqués lorsqu’ils sont disponibles."}
         </p>
 
         {/* ÉTAT : chargement */}
@@ -192,10 +197,10 @@ export default function Work() {
         {!loading && loadError && (
           <div className="mt-14 rounded-2xl border border-orange-900/10 bg-orange-50/60 px-6 py-10 text-center">
             <h3 className="text-lg font-bold text-black">
-              Les projets ne sont pas disponibles pour le moment
+              {en ? "Projects are currently unavailable" : "Les projets ne sont pas disponibles pour le moment"}
             </h3>
             <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-black/55">
-              Un problème a empêché leur chargement. Réessayez dans un instant.
+              {en ? "We couldn’t load them. Please try again shortly." : "Un problème a empêché leur chargement. Réessayez dans un instant."}
             </p>
             <button
               type="button"
@@ -206,7 +211,7 @@ export default function Work() {
               }}
               className="mt-5 rounded-full border border-black/15 px-5 py-2.5 text-xs font-semibold text-black transition hover:border-orange-600 hover:text-orange-700"
             >
-              Réessayer
+              {en ? "Try again" : "Réessayer"}
             </button>
           </div>
         )}
@@ -218,11 +223,10 @@ export default function Work() {
               <Sparkles className="h-5 w-5" strokeWidth={2} />
             </span>
             <h3 className="mt-5 text-lg font-bold text-black">
-              Aucun projet n’est publié dans cette section pour le moment
+              {en ? "No projects have been published here yet" : "Aucun projet n’est publié dans cette section pour le moment"}
             </h3>
             <p className="mt-2 max-w-sm text-[14px] leading-relaxed text-black/50">
-              Écrivez-moi si vous souhaitez en savoir plus sur mon travail ou
-              discuter d’un projet similaire.
+              {en ? "Get in touch to learn more about my work or discuss a similar project." : "Écrivez-moi si vous souhaitez en savoir plus sur mon travail ou discuter d’un projet similaire."}
             </p>
           </div>
         )}
@@ -249,7 +253,7 @@ export default function Work() {
                     }`}
                   >
                     <div className="h-full transition duration-700 ease-out group-hover:scale-[1.035]">
-                      <ProjectPreview project={project} />
+                      <ProjectPreview project={project} en={en} />
                     </div>
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-black/10" />
                     <div className="pointer-events-none absolute inset-x-4 top-4 flex items-center justify-between">
@@ -259,13 +263,13 @@ export default function Work() {
                       {isFeatured && (
                         <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-500 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-white shadow-lg shadow-orange-950/20">
                           <Sparkles className="h-3 w-3" />
-                          À la une
+                          {en ? "Featured" : "À la une"}
                         </span>
                       )}
                     </div>
                     <div className="pointer-events-none absolute bottom-4 left-5 right-5 flex items-end justify-between gap-4">
                       <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/75">
-                        {isFeatured ? "Projet mis en lumière" : "Sélection portfolio"}
+                        {isFeatured ? (en ? "Featured project" : "Projet mis en lumière") : (en ? "Portfolio selection" : "Sélection portfolio")}
                       </p>
                       <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/35 text-white transition group-hover:border-orange-300 group-hover:bg-orange-500">
                         <ArrowUpRight className="h-4 w-4" />
@@ -277,19 +281,19 @@ export default function Work() {
                     <div className="flex items-start justify-between gap-4">
                       <div>
                         <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.17em] text-orange-700/70">
-                          {isFeatured ? "Projet mis en lumière" : "Réalisation"}
+                          {isFeatured ? (en ? "Featured project" : "Projet mis en lumière") : (en ? "Project" : "Réalisation")}
                         </p>
                         <h3 className="text-xl font-bold tracking-tight text-black sm:text-2xl">
-                          {project.title}
+                          {en ? (project.title_en?.trim() || project.title) : project.title}
                         </h3>
                       </div>
                       <span className="shrink-0 pt-1 text-[11px] font-medium tabular-nums text-black/35">
                         {String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
                       </span>
                     </div>
-                    {project.description && (
+                      {(en ? (project.description_en?.trim() || project.description) : project.description) && (
                       <p className="mt-3 max-w-2xl text-[14px] leading-relaxed text-black/60">
-                        {project.description}
+                        {en ? (project.description_en?.trim() || project.description) : project.description}
                       </p>
                     )}
 
@@ -315,7 +319,7 @@ export default function Work() {
                           onClick={() => handleProjectClick(project.id)}
                           className="inline-flex items-center gap-2 rounded-full bg-[#171717] px-4 py-2.5 text-[11px] font-semibold text-white transition hover:bg-orange-600"
                         >
-                          Découvrir le projet <ArrowUpRight className="h-3.5 w-3.5" />
+                          {en ? "View project" : "Découvrir le projet"} <ArrowUpRight className="h-3.5 w-3.5" />
                         </a>
                       )}
                       <button
@@ -323,7 +327,7 @@ export default function Work() {
                         onClick={() => handleSimilarProject(project)}
                         className="inline-flex items-center gap-2 rounded-full px-3 py-2.5 text-[11px] font-semibold text-black/60 transition hover:text-orange-700"
                       >
-                        Un projet similaire <ArrowRight className="h-3.5 w-3.5" />
+                        {en ? "A similar project" : "Un projet similaire"} <ArrowRight className="h-3.5 w-3.5" />
                       </button>
                     </div>
                   </div>
@@ -336,7 +340,7 @@ export default function Work() {
         {/* pied de page */}
         <div className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-black/10 pt-8 sm:flex-row sm:items-center">
           <p className="text-[11px] font-semibold tracking-widest text-black/40">
-            Certaines missions sont confidentielles ; les projets présentés ici sont partageables.
+            {en ? "Some work is confidential; the projects shown here can be shared." : "Certaines missions sont confidentielles ; les projets présentés ici sont partageables."}
           </p>
           <a
             href="https://github.com/DohouFawase"
@@ -344,7 +348,7 @@ export default function Work() {
             rel="noopener noreferrer"
             className="text-[11px] font-bold tracking-widest text-black underline underline-offset-4"
           >
-            VOIR PLUS SUR GITHUB →
+            {en ? "SEE MORE ON GITHUB →" : "VOIR PLUS SUR GITHUB →"}
           </a>
         </div>
       </div>

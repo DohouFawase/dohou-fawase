@@ -1,4 +1,7 @@
+"use client";
+
 import { ArrowUp, ArrowUpRight, Mail, Sparkles } from "lucide-react";
+import { useLanguage } from "@/context/LanguageProvider";
 
 const EMAIL = "dohoufawase@gmail.com";
 const WHATSAPP_URL = "https://wa.me/2290197395756";
@@ -20,6 +23,11 @@ const SOCIAL_LINKS = [
 ];
 
 export default function CtaFooter() {
+  const { language } = useLanguage();
+  const en = language === "en";
+  const footerLinks = en
+    ? [{ label: "About", href: "#about" }, { label: "Experience", href: "#work" }, { label: "Approach", href: "#method" }, { label: "Projects", href: "#projects" }, { label: "Expertise", href: "#stack" }, { label: "Principles", href: "#principles" }, { label: "Contact", href: "#contact" }]
+    : FOOTER_LINKS;
   const currentYear = new Date().getFullYear();
 
   return (
@@ -39,17 +47,16 @@ export default function CtaFooter() {
           <div>
             <p className="inline-flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] text-orange-300 sm:text-[11px]">
               <Sparkles size={14} />
-              UNE IDÉE À FAIRE GRANDIR ?
+              {en ? "AN IDEA TO GROW?" : "UNE IDÉE À FAIRE GRANDIR ?"}
             </p>
             <h2 className="mt-6 max-w-3xl text-[clamp(2.6rem,7vw,6.2rem)] font-medium leading-[0.94] tracking-[-0.065em]">
-              Faisons-en
+              {en ? "Let’s make" : "Faisons-en"}
               <span className="block font-serif italic text-orange-400">
-                quelque chose de réel.
+                {en ? "something real." : "quelque chose de réel."}
               </span>
             </h2>
             <p className="mt-6 max-w-lg text-sm leading-7 text-white/55 sm:text-base">
-              Produit web ou mobile, nouvelle fonctionnalité ou renfort
-              technique : racontez-moi ce que vous voulez construire.
+              {en ? "Web or mobile product, a new feature, or technical support: tell me what you want to build." : "Produit web ou mobile, nouvelle fonctionnalité ou renfort technique : racontez-moi ce que vous voulez construire."}
             </p>
           </div>
 
@@ -58,7 +65,7 @@ export default function CtaFooter() {
               href="#contact"
               className="footer-primary-cta group inline-flex min-h-14 w-full items-center justify-between gap-8 rounded-full bg-orange-500 px-6 text-sm font-bold text-white transition hover:bg-orange-400 sm:w-auto sm:min-w-72"
             >
-              Parlons de votre projet
+              {en ? "Let’s discuss your project" : "Parlons de votre projet"}
               <span className="grid h-9 w-9 place-items-center rounded-full bg-white/15 transition group-hover:rotate-45 group-hover:bg-white/25">
                 <ArrowUpRight size={17} />
               </span>
@@ -69,7 +76,7 @@ export default function CtaFooter() {
               rel="noopener noreferrer"
               className="inline-flex min-h-12 w-full items-center justify-center rounded-full border border-white/20 px-6 text-xs font-semibold text-white/75 transition hover:border-white/50 hover:text-white sm:w-auto"
             >
-              Ou échangeons sur WhatsApp
+              {en ? "Or chat on WhatsApp" : "Ou échangeons sur WhatsApp"}
               <ArrowUpRight className="ml-2 h-3.5 w-3.5" />
             </a>
           </div>
@@ -90,22 +97,21 @@ export default function CtaFooter() {
                   DOHOU FAWASE
                 </span>
                 <span className="mt-1 block text-[9px] font-semibold tracking-[0.17em] text-white/40">
-                  INGÉNIERIE LOGICIELLE · PRODUIT
+                {en ? "SOFTWARE ENGINEERING · PRODUCT" : "INGÉNIERIE LOGICIELLE · PRODUIT"}
                 </span>
               </span>
             </a>
             <p className="mt-4 max-w-xs text-xs leading-6 text-white/45">
-              Ingénierie logicielle, conception produit et expériences
-              numériques pensées pour durer.
+              {en ? "Software engineering, product design, and digital experiences built to last." : "Ingénierie logicielle, conception produit et expériences numériques pensées pour durer."}
             </p>
           </div>
 
-          <nav aria-label="Navigation de pied de page">
+          <nav aria-label={en ? "Footer navigation" : "Navigation de pied de page"}>
             <p className="mb-4 text-[9px] font-bold tracking-[0.18em] text-white/35">
-              EXPLORER
+              {en ? "EXPLORE" : "EXPLORER"}
             </p>
             <ul className="grid grid-cols-2 gap-x-5 gap-y-3 sm:grid-cols-3">
-              {FOOTER_LINKS.map((link) => (
+              {footerLinks.map((link) => (
                 <li key={link.href}>
                   <a
                     href={link.href}
@@ -120,7 +126,7 @@ export default function CtaFooter() {
 
           <div>
             <p className="mb-4 text-[9px] font-bold tracking-[0.18em] text-white/35">
-              RESTONS EN CONTACT
+              {en ? "GET IN TOUCH" : "RESTONS EN CONTACT"}
             </p>
             <a
               href={`mailto:${EMAIL}`}
@@ -147,13 +153,13 @@ export default function CtaFooter() {
         </div>
 
         <div className="flex flex-col gap-4 pt-5 text-[9px] font-medium tracking-[0.1em] text-white/35 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {currentYear} DOHOU GBENOUPKO FAWASE. TOUS DROITS RÉSERVÉS.</p>
+          <p>© {currentYear} DOHOU GBENOUPKO FAWASE. {en ? "ALL RIGHTS RESERVED." : "TOUS DROITS RÉSERVÉS."}</p>
           <p>CONÇU AVEC SOIN · BÉNIN</p>
           <a
             href="#hero"
             className="group inline-flex items-center gap-2 self-start text-white/65 transition hover:text-white sm:self-auto"
           >
-            RETOUR EN HAUT
+            {en ? "BACK TO TOP" : "RETOUR EN HAUT"}
             <span className="grid h-7 w-7 place-items-center rounded-full border border-white/15 transition group-hover:-translate-y-0.5 group-hover:border-orange-300 group-hover:text-orange-300">
               <ArrowUp size={13} />
             </span>

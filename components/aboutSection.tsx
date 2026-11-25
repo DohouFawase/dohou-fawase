@@ -1,6 +1,7 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
+import { useLanguage } from "@/context/LanguageProvider";
 
 const SERVICES = [
   {
@@ -34,11 +35,27 @@ const FACTS = [
   { label: "EXPÉRIENCE", value: "4+ ans" },
   { label: "DISPONIBLE POUR", value: "Missions freelance et postes à temps plein" },
 ];
+const SERVICES_EN = [
+  { n: "01", title: "Product design", desc: "From early sketches to polished interfaces, with care for clarity, accessibility, and product goals." },
+  { n: "02", title: "Web and mobile development", desc: "Thoughtful interfaces and maintainable back ends with React, Next.js, Laravel, or NestJS. The technology follows the need." },
+  { n: "03", title: "Visual identity", desc: "Consistent visual foundations that help a product stand out and earn trust." },
+  { n: "04", title: "Architecture and performance", desc: "Structured, testable systems designed to grow without needless complexity." },
+];
+const FACTS_EN = [
+  { label: "FOCUS", value: "Product design and development" },
+  { label: "INDUSTRIES", value: "Real estate · Fintech · SaaS · Agritech · Edtech · Proptech · Food…" },
+  { label: "EXPERIENCE", value: "4+ years" },
+  { label: "AVAILABLE FOR", value: "Freelance projects and full-time roles" },
+];
 
 const CV_FILE_PATH = "/resumen/fawase_dohou.pdf";
 const CV_DOWNLOAD_NAME = "CV_DOHOU_Fawase.pdf";
 
 export default function About() {
+  const { language } = useLanguage();
+  const en = language === "en";
+  const facts = en ? FACTS_EN : FACTS;
+  const services = en ? SERVICES_EN : SERVICES;
   // Enregistrement dans Supabase + Déclenchement du téléchargement
   const handleDownloadCV = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -71,16 +88,16 @@ export default function About() {
             01
           </span>
           <span className="text-[11px] font-semibold tracking-widest text-black/40">
-            À PROPOS
+            {en ? "ABOUT" : "À PROPOS"}
           </span>
         </div>
 
         {/* headline */}
         <h2 className="max-w-4xl text-[2.4rem] font-extrabold leading-[1.1] tracking-tight text-black sm:text-5xl">
-          Des produits qui commencent par une question
+          {en ? "Products that begin with a question" : "Des produits qui commencent par une question"}
         </h2>
         <p className="mt-1 max-w-4xl font-serif text-[2.4rem] italic leading-[1.1] text-orange-600 sm:text-5xl">
-          et se terminent en production.
+          {en ? "and make it to production." : "et se terminent en production."}
         </p>
 
         {/* content grid */}
@@ -89,21 +106,15 @@ export default function About() {
           <div>
             <div className="space-y-6 text-[15px] leading-relaxed text-black/65">
               <p>
-                Je m&apos;appelle DOHOU GBENOUPKO FAWASE, connu en ligne sous le nom de{" "}
-                <span className="font-bold text-black">OMO IYA ONIRICE</span>. Je
-                travaille à la croisée du produit, du design et de l&apos;ingénierie
-                logicielle : de la compréhension du besoin à la conception et au
-                développement de la solution.
+                {en ? "My name is DOHOU GBENOUPKO FAWASE, known online as " : "Je m'appelle DOHOU GBENOUPKO FAWASE, connu en ligne sous le nom de "}{" "}
+                <span className="font-bold text-black">OMO IYA ONIRICE</span>.{" "}
+                {en ? "I work at the intersection of product, design, and software engineering, from understanding a need to designing and building the solution." : "Je travaille à la croisée du produit, du design et de l'ingénierie logicielle : de la compréhension du besoin à la conception et au développement de la solution."}
               </p>
               <p>
-                Mon parcours m&apos;a amené à contribuer à la conception d&apos;identités
-                visuelles et au développement de produits web et mobiles, notamment
-                dans l&apos;immobilier, la fintech et le SaaS.
+                {en ? "My experience includes creating visual identities and developing web and mobile products, especially in real estate, fintech, and SaaS." : "Mon parcours m'a amené à contribuer à la conception d'identités visuelles et au développement de produits web et mobiles, notamment dans l'immobilier, la fintech et le SaaS."}
               </p>
               <p>
-                Je peux intervenir sur une étape précise ou accompagner plusieurs
-                phases du produit, de la conception à la mise en production.
-                Parlons de votre besoin et du cadre de la mission.
+                {en ? "I can support a specific phase or guide several stages of a product, from design through launch. Let’s discuss your needs and the scope." : "Je peux intervenir sur une étape précise ou accompagner plusieurs phases du produit, de la conception à la mise en production. Parlons de votre besoin et du cadre de la mission."}
               </p>
             </div>
 
@@ -114,13 +125,13 @@ export default function About() {
                 onClick={handleDownloadCV}
                 className="inline-flex items-center gap-2 rounded-full bg-black px-6 py-3 text-[12px] font-bold tracking-widest text-white transition hover:bg-black/85"
               >
-                TÉLÉCHARGER MON CV <span>↓</span>
+                {en ? "DOWNLOAD MY CV" : "TÉLÉCHARGER MON CV"} <span>↓</span>
               </a>
             </div>
 
             {/* facts table */}
             <div className="mt-10 grid grid-cols-2 border border-black/10">
-              {FACTS.map((fact, i) => (
+              {facts.map((fact, i) => (
                 <div
                   key={fact.label}
                   className={[
@@ -143,10 +154,10 @@ export default function About() {
           {/* ---------------- RIGHT: services ---------------- */}
           <div>
             <div className="mb-4 text-[11px] font-semibold tracking-widest text-black/40">
-              CE QUE JE FAIS
+              {en ? "WHAT I DO" : "CE QUE JE FAIS"}
             </div>
             <div className="space-y-4">
-              {SERVICES.map((s) => (
+              {services.map((s) => (
                 <div
                   key={s.n}
                   className="rounded-2xl border border-black/10 bg-black/1.5 p-6 transition hover:border-black/20"

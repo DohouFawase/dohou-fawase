@@ -7,7 +7,9 @@ import { createProjectAction, updateProjectAction } from "@/app/dashboard/projec
 export interface Project {
   id: string;
   title: string;
+  title_en?: string | null;
   description?: string;
+  description_en?: string | null;
   image_url?: string;
   project_url?: string;
   github_url?: string;
@@ -88,6 +90,11 @@ export function ProjectModal({ projectToEdit, isOpen, onClose }: ProjectModalPro
             />
           </div>
 
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-neutral-700">Project title (English)</label>
+            <input type="text" name="title_en" defaultValue={projectToEdit?.title_en || ""} placeholder="English title (optional)" className="w-full rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100" />
+          </div>
+
           {/* Description */}
           <div className="space-y-2">
             <label className="text-xs font-semibold text-neutral-700">Description</label>
@@ -98,6 +105,11 @@ export function ProjectModal({ projectToEdit, isOpen, onClose }: ProjectModalPro
               placeholder="Brève description du projet..."
               className="w-full resize-y rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100"
             />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-semibold text-neutral-700">Description (English)</label>
+            <textarea name="description_en" rows={3} defaultValue={projectToEdit?.description_en || ""} placeholder="English project description (optional)" className="w-full resize-y rounded-xl border border-neutral-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 focus:border-orange-400 focus:ring-4 focus:ring-orange-100" />
           </div>
 
           {/* Stack Technologique */}

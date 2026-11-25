@@ -4,6 +4,7 @@ import useAuth from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { ArrowDownToLine, ArrowUpRight, Menu, X } from "lucide-react";
+import { useLanguage } from "@/context/LanguageProvider";
 
 const LINKS = [
   { label: "À propos", number: "01", href: "#about" },
@@ -27,6 +28,11 @@ const SECTION_IDS = [
 ];
 
 export default function Navbar() {
+  const { language, setLanguage } = useLanguage();
+  const isEnglish = language === "en";
+  const links = isEnglish
+    ? [{ label: "About", number: "01", href: "#about" }, { label: "Experience", number: "02", href: "#work" }, { label: "Projects", number: "04", href: "#projects" }, { label: "Expertise", number: "05", href: "#stack" }, { label: "Contact", number: "07", href: "#contact" }]
+    : LINKS;
   const [open, setOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const { user, loading } = useAuth();
@@ -113,7 +119,7 @@ export default function Navbar() {
         </a>
 
         <ul className="nav-capsule hidden items-center gap-1 p-1 lg:flex">
-          {LINKS.map((link) => {
+          {links.map((link) => {
             const isActive = activeSection === link.href.slice(1);
             return (
               <li key={link.href}>
@@ -131,19 +137,22 @@ export default function Navbar() {
         </ul>
 
         <div className="hidden items-center gap-3 lg:flex">
+          <div className="inline-flex rounded-full border border-black/10 p-1" aria-label={isEnglish ? "Choose language" : "Choisir la langue"}>
+            {(["fr", "en"] as const).map((value) => <button key={value} type="button" onClick={() => setLanguage(value)} aria-pressed={language === value} className={`rounded-full px-2.5 py-1 text-[10px] font-bold uppercase ${language === value ? "bg-black text-white" : "text-black/55"}`}>{value}</button>)}
+          </div>
           {!loading && (
             <a
               href={user ? "/dashboard" : "/auth"}
               className="nav-account-link"
             >
-              {user ? "MON ESPACE" : "CONNEXION"}
+              {user ? (isEnglish ? "MY SPACE" : "MON ESPACE") : (isEnglish ? "SIGN IN" : "CONNEXION")}
             </a>
           )}
           <a href={CV_FILE_PATH} onClick={handleDownloadCV} className="cv-link">
             CV <ArrowDownToLine size={13} />
           </a>
           <a href="#contact" className="nav-contact-link">
-            <span>Parlons projet</span>
+            <span>{isEnglish ? "Let’s talk" : "Parlons projet"}</span>
             <span className="nav-contact-icon">
               <ArrowUpRight size={15} />
             </span>
@@ -153,12 +162,12 @@ export default function Navbar() {
         <button
           type="button"
           onClick={() => setOpen((isOpen) => !isOpen)}
-          aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
+          aria-label={open ? (isEnglish ? "Close menu" : "Fermer le menu") : (isEnglish ? "Open menu" : "Ouvrir le menu")}
           aria-expanded={open}
           aria-controls="mobile-navigation"
           className={`mobile-menu-toggle lg:hidden ${open ? "is-open" : ""}`}
         >
-          <span>{open ? "FERMER" : "MENU"}</span>
+          <span>{open ? (isEnglish ? "CLOSE" : "FERMER") : (isEnglish ? "MENU" : "MENU")}</span>
           <span className="mobile-menu-icon">
             {open ? <X size={18} /> : <Menu size={18} />}
           </span>
@@ -172,9 +181,14 @@ export default function Navbar() {
         className={`mobile-nav-panel lg:hidden ${open ? "is-open" : ""}`}
       >
         <div className="mobile-nav-inner">
-          <p className="mobile-nav-kicker">NAVIGATION · PORTFOLIO</p>
+          <p className="mobile-nav-kicker">{isEnglish ? "NAVIGATION · PORTFOLIO" : "NAVIGATION · PORTFOLIO"}</p>
+          <div className="mb-5 flex gap-2" aria-label={isEnglish ? "Choose language" : "Choisir la langue"}>
+            {(["fr", "en"] as const).map((value) => (
+              <button key={value} type="button" onClick={() => setLanguage(value)} aria-pressed={language === value} className={`rounded-full border px-3 py-1.5 text-xs font-bold uppercase ${language === value ? "bg-white text-black" : "border-white/20 text-white/70"}`}>{value}</button>
+            ))}
+          </div>
           <ul className="mobile-nav-links">
-            {LINKS.map((link) => {
+          {links.map((link) => {
               const isActive = activeSection === link.href.slice(1);
               return (
                 <li key={link.href}>
@@ -195,11 +209,11 @@ export default function Navbar() {
           <div className="mobile-nav-actions">
             {!loading && (
               <a href={user ? "/dashboard" : "/auth"} onClick={() => setOpen(false)}>
-                {user ? "MON ESPACE" : "CONNEXION"}
+                {user ? (isEnglish ? "MY SPACE" : "MON ESPACE") : (isEnglish ? "SIGN IN" : "CONNEXION")}
               </a>
             )}
             <a href={CV_FILE_PATH} onClick={handleDownloadCV}>
-              Télécharger le CV <ArrowDownToLine size={14} />
+              {isEnglish ? "Download CV" : "Télécharger le CV"} <ArrowDownToLine size={14} />
             </a>
           </div>
           <a
@@ -208,7 +222,7 @@ export default function Navbar() {
             className="mobile-nav-cta"
             tabIndex={open ? 0 : -1}
           >
-            Construisons quelque chose
+            {isEnglish ? "Let’s build something" : "Construisons quelque chose"}
             <ArrowUpRight size={18} />
           </a>
         </div>

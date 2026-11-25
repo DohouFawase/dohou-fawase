@@ -9,7 +9,9 @@ export async function createExperienceAction(formData: FormData) {
 
   const company = formData.get("company") as string;
   const role = formData.get("role") as string;
+  const role_en = ((formData.get("role_en") as string) || "").trim() || null;
   const description = formData.get("description") as string;
+  const description_en = ((formData.get("description_en") as string) || "").trim() || null;
   const location = formData.get("location") as string;
   const start_date = formData.get("start_date") as string;
   const end_date = formData.get("end_date") ? (formData.get("end_date") as string) : null;
@@ -20,7 +22,9 @@ export async function createExperienceAction(formData: FormData) {
   const { error } = await supabase.from("experiences").insert({
     company,
     role,
+    role_en,
     description,
+    description_en,
     location,
     start_date,
     end_date,
@@ -43,7 +47,9 @@ export async function updateExperienceAction(id: string, formData: FormData) {
 
   const company = formData.get("company") as string;
   const role = formData.get("role") as string;
+  const role_en = ((formData.get("role_en") as string) || "").trim() || null;
   const description = formData.get("description") as string;
+  const description_en = ((formData.get("description_en") as string) || "").trim() || null;
   const location = formData.get("location") as string;
   const start_date = formData.get("start_date") as string;
   const end_date = formData.get("end_date") ? (formData.get("end_date") as string) : null;
@@ -56,7 +62,9 @@ export async function updateExperienceAction(id: string, formData: FormData) {
     .update({
       company,
       role,
+      role_en,
       description,
+      description_en,
       location,
       start_date,
       end_date,

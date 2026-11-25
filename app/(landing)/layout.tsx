@@ -9,6 +9,7 @@ import TerminalLoader from "@/components/terminalLoader";
 import { AnalyticsTracker } from "@/components/analytics-tracker";
 import { VisitorWelcome } from "@/components/visitor-welcome";
 import ScrollMotion from "@/components/scroll-motion";
+import { LanguageProvider } from "@/context/LanguageProvider";
 
 const SITE_URL = 'https://dohou.vercel.app';
 export const metadata: Metadata = {
@@ -56,6 +57,7 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="min-h-full flex flex-col">
+        <LanguageProvider>
         <AuthProvider>
           {/* Placé en haut pour bloquer l'écran dès le premier rendu */}
           <TerminalLoader />
@@ -66,6 +68,7 @@ export default function RootLayout({
           <VisitorWelcome />
           <CtaFooter />
         </AuthProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

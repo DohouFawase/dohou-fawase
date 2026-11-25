@@ -8,7 +8,9 @@ export async function createProjectAction(formData: FormData) {
   const supabase = await createClient();
 
   const title = formData.get("title") as string;
+  const title_en = ((formData.get("title_en") as string) || "").trim() || null;
   const description = formData.get("description") as string;
+  const description_en = ((formData.get("description_en") as string) || "").trim() || null;
   const image_url = formData.get("image_url") as string;
   const project_url = formData.get("project_url") as string;
   const github_url = formData.get("github_url") as string;
@@ -21,7 +23,9 @@ export async function createProjectAction(formData: FormData) {
 
   const { error } = await supabase.from("projects").insert({
     title,
+    title_en,
     description,
+    description_en,
     image_url,
     project_url,
     github_url,
@@ -42,7 +46,9 @@ export async function updateProjectAction(id: string, formData: FormData) {
   const supabase = await createClient();
 
   const title = formData.get("title") as string;
+  const title_en = ((formData.get("title_en") as string) || "").trim() || null;
   const description = formData.get("description") as string;
+  const description_en = ((formData.get("description_en") as string) || "").trim() || null;
   const image_url = formData.get("image_url") as string;
   const project_url = formData.get("project_url") as string;
   const github_url = formData.get("github_url") as string;
@@ -57,7 +63,9 @@ export async function updateProjectAction(id: string, formData: FormData) {
     .from("projects")
     .update({
       title,
+      title_en,
       description,
+      description_en,
       image_url,
       project_url,
       github_url,

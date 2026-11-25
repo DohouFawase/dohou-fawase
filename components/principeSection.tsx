@@ -1,4 +1,5 @@
 "use client";
+import { useLanguage } from "@/context/LanguageProvider";
 
 const PRINCIPLES = [
   {
@@ -24,6 +25,14 @@ const PRINCIPLES = [
 ];
 
 export default function Principles() {
+  const { language } = useLanguage();
+  const en = language === "en";
+  const principles = en ? [
+    { n: "01", title: "Feel is a feature.", desc: "Latency, motion, fluidity, and rhythm are part of the product. An unclear or sluggish interface can hurt the experience, even when all its features are there." },
+    { n: "02", title: "Ship small, ship often.", desc: "I favor staged releases followed by feedback and focused improvements. This helps a product evolve without waiting for a full redesign." },
+    { n: "03", title: "Share decisions.", desc: "Useful documentation, clear commits, and shared decisions make projects easier to maintain and help teams work together." },
+    { n: "04", title: "Proven tools, thoughtful craft.", desc: "I choose dependable tools suited to the work, such as Laravel, Next.js, and TypeScript, while keeping solutions as simple as possible." },
+  ] : PRINCIPLES;
   return (
     <section id="principles" className="w-full bg-white text-black">
       <div data-reveal className="mx-auto container  px-6 pt-14 pb-24 sm:px-10 lg:px-16">
@@ -33,19 +42,19 @@ export default function Principles() {
             06
           </span>
           <span className="text-[11px] font-semibold tracking-widest text-black/40">
-            PRINCIPES
+            {en ? "PRINCIPLES" : "PRINCIPES"}
           </span>
         </div>
 
         {/* titre principal */}
         <h2 className="max-w-4xl text-[2.4rem] font-extrabold leading-[1.1] tracking-tight text-black sm:text-5xl">
-          Les idées qui guident mon travail{" "}
-          <span className="font-serif italic text-orange-600">au quotidien.</span>
+          {en ? "The ideas that guide my work " : "Les idées qui guident mon travail "}{" "}
+          <span className="font-serif italic text-orange-600">{en ? "every day." : "au quotidien."}</span>
         </h2>
 
         {/* grille de principes */}
         <div data-reveal-stagger className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2">
-          {PRINCIPLES.map((p) => (
+          {principles.map((p) => (
             <div
               key={p.n}
               data-reveal="card"
@@ -56,7 +65,7 @@ export default function Principles() {
                   {p.n}
                 </span>
                 <span className="text-[10px] font-semibold tracking-widest text-black/35">
-                  PRINCIPE
+                  {en ? "PRINCIPLE" : "PRINCIPE"}
                 </span>
               </div>
 

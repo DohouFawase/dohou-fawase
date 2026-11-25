@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useLanguage } from "@/context/LanguageProvider";
 
 const STEPS = [
   {
@@ -24,6 +25,15 @@ const PHOTO_URL =
   "/images/seconde.jpeg";
 
 export default function HowIWork() {
+  const { language } = useLanguage();
+  const en = language === "en";
+  const steps = en
+    ? [
+        { n: "01", title: "Clarify the need", desc: "We define the context, goals, constraints, and user needs to set useful priorities and a realistic scope." },
+        { n: "02", title: "Design and build", desc: "I turn priorities into user journeys and interfaces, then build an accessible, maintainable solution suited to the technical context." },
+        { n: "03", title: "Launch and improve", desc: "After launch, we check how things work, gather feedback, and identify improvements." },
+      ]
+    : STEPS;
   return (
     <section id="method" className="w-full bg-white text-black">
       <div data-reveal className="mx-auto container px-6 pt-14 pb-24 sm:px-10 lg:px-16">
@@ -33,22 +43,21 @@ export default function HowIWork() {
             03
           </span>
           <span className="text-[11px] font-semibold tracking-widest text-black/40">
-            MA MÉTHODE
+            {en ? "MY APPROACH" : "MA MÉTHODE"}
           </span>
         </div>
 
         {/* headline */}
         <h2 className="max-w-4xl text-[2.4rem] font-extrabold leading-[1.1] tracking-tight text-black sm:text-5xl">
-          Du premier échange à la mise en production,{" "}
+          {en ? "From our first conversation to launch, " : "Du premier échange à la mise en production, "}{" "}
           <span className="font-serif italic text-orange-600">
-            une démarche claire.
+            {en ? "a clear process." : "une démarche claire."}
           </span>
         </h2>
 
         {/* intro */}
         <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-black/60">
-          Chaque projet commence par un besoin concret. Nous avançons par étapes,
-          avec des décisions expliquées et des points de validation réguliers.
+          {en ? "Every project starts with a concrete need. We move forward in clear steps, with explained decisions and regular check-ins." : "Chaque projet commence par un besoin concret. Nous avançons par étapes, avec des décisions expliquées et des points de validation réguliers."}
         </p>
 
         {/* content grid */}
@@ -67,7 +76,7 @@ export default function HowIWork() {
 
             {/* bottom-left tag */}
             <div className="absolute bottom-5 left-5 text-[11px] font-semibold tracking-widest text-white/80">
-              CONCEPTION · DÉVELOPPEMENT
+              {en ? "DESIGN · DEVELOPMENT" : "CONCEPTION · DÉVELOPPEMENT"}
             </div>
 
             {/* bottom-right badge */}
@@ -78,7 +87,7 @@ export default function HowIWork() {
 
           {/* ---------------- RIGHT: steps ---------------- */}
           <div data-reveal-stagger className="space-y-5">
-            {STEPS.map((step) => (
+            {steps.map((step) => (
               <div
                 key={step.n}
                 data-reveal
