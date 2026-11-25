@@ -5,10 +5,10 @@ import { createContext, useContext, useEffect, useState } from "react";
 export type Language = "fr" | "en";
 type LanguageContextValue = { language: Language; setLanguage: (language: Language) => void };
 
-const LanguageContext = createContext<LanguageContextValue>({ language: "fr", setLanguage: () => {} });
+const LanguageContext = createContext<LanguageContextValue>({ language: "en", setLanguage: () => {} });
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>("fr");
+  const [language, setLanguageState] = useState<Language>("en");
 
   useEffect(() => {
     const saved = window.localStorage.getItem("portfolio-language");

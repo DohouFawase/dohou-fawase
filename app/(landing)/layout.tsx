@@ -13,8 +13,8 @@ import { LanguageProvider } from "@/context/LanguageProvider";
 
 const SITE_URL = 'https://dohou.vercel.app';
 export const metadata: Metadata = {
-  title: 'Développeur Full-Stack | Dohou Gbenoupko Fawase',
-  description: 'Ingénieur logiciel au croisement du produit, du design et du développement. Découvrez le parcours, les projets et les expertises de Dohou Gbenoupko Fawase.',
+  title: 'Full-Stack Developer | Dohou Gbenoupko Fawase',
+  description: 'Software engineer at the intersection of product, design, and development. Explore Dohou Gbenoupko Fawase’s experience, projects, and expertise.',
   metadataBase: new URL(SITE_URL),
   alternates: {
     canonical: '/',
@@ -23,11 +23,11 @@ export const metadata: Metadata = {
     icon: '/og-image.svg',
   },
   openGraph: {
-    title: 'Dohou Gbenoupko Fawase — Produit, design et ingénierie',
-    description: 'Portfolio de Dohou Fawase : expériences, projets web et mobile, méthode de travail et contact.',
+    title: 'Dohou Gbenoupko Fawase — Product, Design, and Engineering',
+    description: 'Dohou Fawase’s portfolio: experience, web and mobile projects, approach, and contact.',
     url: SITE_URL,
     siteName: 'Dohou Fawase — Portfolio',
-    locale: 'fr_FR',
+    locale: 'en_US',
     type: 'website',
   },
 };
@@ -39,7 +39,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="fr"
+      lang="en"
       className={`${Alpino.variable} h-full`}
     >
       <head>
